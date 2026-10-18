@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
+import { signIn } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[var(--canvas)] flex flex-col justify-center items-center px-4 py-12">
       <div className="w-full max-w-sm">
-        {/* Brand header */}
+        {}
         <div className="text-center mb-8">
           <Link
             href="/"
@@ -49,15 +50,13 @@ export default function LoginPage() {
             <span className="w-3 h-3 rounded-full bg-[var(--accent)]" />
             <span>SAHARA</span>
           </Link>
-          <h1 className="text-xl font-semibold text-[var(--ink)] mt-3">
-            Sign In
-          </h1>
+          <h1 className="text-xl font-semibold text-[var(--ink)] mt-3">Sign In</h1>
           <p className="text-xs text-[var(--ink-secondary)] mt-1">
             Access your merchant portal or buyer account.
           </p>
         </div>
 
-        {/* Card */}
+        {}
         <form
           onSubmit={handleSubmit}
           className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-4"
@@ -111,10 +110,7 @@ export default function LoginPage() {
         </form>
 
         <div className="text-center mt-6">
-          <Link
-            href="/"
-            className="text-xs text-[var(--ink-tertiary)] hover:text-[var(--ink)]"
-          >
+          <Link href="/" className="text-xs text-[var(--ink-tertiary)] hover:text-[var(--ink)]">
             ← Return to storefront
           </Link>
         </div>

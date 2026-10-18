@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
+import { postReviewAction } from "@/lib/actions/reviews";
 import { Button } from "../ui/Button";
 import { useToast } from "../ui/Toast";
-import { postReviewAction } from "@/lib/actions/reviews";
 
 export interface ReviewItem {
   id: string;
@@ -62,11 +63,7 @@ export function ReviewSection({
           </p>
         </div>
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setIsOpen(!isOpen)}
-        >
+        <Button variant="secondary" size="sm" onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? "Close" : "Write a Review"}
         </Button>
       </div>
@@ -76,9 +73,7 @@ export function ReviewSection({
           onSubmit={handleSubmit}
           className="p-6 rounded-2xl bg-white border border-black/[0.06] mb-8 max-w-lg transition-all"
         >
-          <h3 className="text-sm font-semibold text-[var(--ink)] mb-4">
-            Share Your Experience
-          </h3>
+          <h3 className="text-sm font-semibold text-[var(--ink)] mb-4">Share Your Experience</h3>
 
           <div className="flex flex-col gap-4">
             <div>
@@ -137,29 +132,19 @@ export function ReviewSection({
               />
             </div>
 
-            <Button
-              type="submit"
-              size="md"
-              isLoading={isSubmitting}
-              className="mt-2"
-            >
+            <Button type="submit" size="md" isLoading={isSubmitting} className="mt-2">
               Post Review
             </Button>
           </div>
         </form>
       )}
 
-      {/* Reviews List */}
+      {}
       <div className="flex flex-col gap-4">
         {reviews.map((r) => (
-          <div
-            key={r.id}
-            className="p-5 rounded-2xl bg-white border border-black/[0.04]"
-          >
+          <div key={r.id} className="p-5 rounded-2xl bg-white border border-black/[0.04]">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-[var(--ink)]">
-                {r.authorName}
-              </span>
+              <span className="text-sm font-semibold text-[var(--ink)]">{r.authorName}</span>
               <span
                 className="text-amber-600 text-xs tracking-widest"
                 aria-label={`${r.rating} out of 5 stars`}

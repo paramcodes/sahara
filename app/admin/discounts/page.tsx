@@ -1,6 +1,5 @@
-import { getProducts } from "@/lib/repos/products";
 import { DiscountsManager } from "@/components/admin/DiscountsManager";
-
+import { getProducts } from "@/lib/repos/products";
 
 export default async function AdminDiscountsPage() {
   const products = await getProducts({ activeOnly: false });

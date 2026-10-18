@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { addToCartAction } from "@/lib/actions/cart";
 import { Button } from "../ui/Button";
 import { Stepper } from "../ui/Stepper";
 import { useToast } from "../ui/Toast";
-import { addToCartAction } from "@/lib/actions/cart";
 
 export function AddToCartForm({
   productId,
@@ -43,15 +43,8 @@ export function AddToCartForm({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-[var(--ink-secondary)]">
-          Quantity
-        </span>
-        <Stepper
-          value={qty}
-          min={1}
-          max={maxAvailable}
-          onChange={setQty}
-        />
+        <span className="text-xs font-medium text-[var(--ink-secondary)]">Quantity</span>
+        <Stepper value={qty} min={1} max={maxAvailable} onChange={setQty} />
       </div>
 
       <Button

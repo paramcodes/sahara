@@ -1,0 +1,8 @@
+# Sahara Atelier
+
+> A single-brand storefront built on Apple design principles. Handcrafted essentials with quiet refinement.
+
+## Links
+
+- Home: https://sahara.store/
+- Docs: https://sahara.store/docs

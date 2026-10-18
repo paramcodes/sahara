@@ -30,7 +30,13 @@ export interface MockProduct {
   createdAt: Date;
   updatedAt: Date;
   specs: { id: string; productId: string; key: string; value: string; displayOrder: number }[];
-  images: { id: string; productId: string; imagePath: string; displayOrder: number; altText: string }[];
+  images: {
+    id: string;
+    productId: string;
+    imagePath: string;
+    displayOrder: number;
+    altText: string;
+  }[];
 }
 
 export const MOCK_PRODUCTS: MockProduct[] = [
@@ -54,10 +60,34 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     bannerPath:
       "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1200&auto=format&fit=crop",
     specs: [
-      { id: "s1", productId: "prod-1", key: "Material", value: "High-fire stoneware ceramic", displayOrder: 0 },
-      { id: "s2", productId: "prod-1", key: "Capacity", value: "350ml / 12 fl oz", displayOrder: 1 },
-      { id: "s3", productId: "prod-1", key: "Origin", value: "Kyoto Studio, Japan", displayOrder: 2 },
-      { id: "s4", productId: "prod-1", key: "Care", value: "Dishwasher safe; microwave gentle", displayOrder: 3 },
+      {
+        id: "s1",
+        productId: "prod-1",
+        key: "Material",
+        value: "High-fire stoneware ceramic",
+        displayOrder: 0,
+      },
+      {
+        id: "s2",
+        productId: "prod-1",
+        key: "Capacity",
+        value: "350ml / 12 fl oz",
+        displayOrder: 1,
+      },
+      {
+        id: "s3",
+        productId: "prod-1",
+        key: "Origin",
+        value: "Kyoto Studio, Japan",
+        displayOrder: 2,
+      },
+      {
+        id: "s4",
+        productId: "prod-1",
+        key: "Care",
+        value: "Dishwasher safe; microwave gentle",
+        displayOrder: 3,
+      },
     ],
     images: [
       {
@@ -99,9 +129,21 @@ export const MOCK_PRODUCTS: MockProduct[] = [
       "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?q=80&w=1200&auto=format&fit=crop",
     specs: [
       { id: "s5", productId: "prod-2", key: "Dimensions", value: "130cm x 180cm", displayOrder: 0 },
-      { id: "s6", productId: "prod-2", key: "Fiber", value: "100% Extra-fine Merino Wool", displayOrder: 1 },
+      {
+        id: "s6",
+        productId: "prod-2",
+        key: "Fiber",
+        value: "100% Extra-fine Merino Wool",
+        displayOrder: 1,
+      },
       { id: "s7", productId: "prod-2", key: "Weight", value: "720g", displayOrder: 2 },
-      { id: "s8", productId: "prod-2", key: "Care", value: "Dry clean or cold hand wash flat", displayOrder: 3 },
+      {
+        id: "s8",
+        productId: "prod-2",
+        key: "Care",
+        value: "Dry clean or cold hand wash flat",
+        displayOrder: 3,
+      },
     ],
     images: [
       {
@@ -135,8 +177,20 @@ export const MOCK_PRODUCTS: MockProduct[] = [
       "https://images.unsplash.com/photo-1576092768241-dec231879fc3?q=80&w=1200&auto=format&fit=crop",
     specs: [
       { id: "s9", productId: "prod-3", key: "Capacity", value: "800ml", displayOrder: 0 },
-      { id: "s10", productId: "prod-3", key: "Finish", value: "Textured charcoal matte enamel", displayOrder: 1 },
-      { id: "s11", productId: "prod-3", key: "Included", value: "Infuser mesh + cast iron trivet", displayOrder: 2 },
+      {
+        id: "s10",
+        productId: "prod-3",
+        key: "Finish",
+        value: "Textured charcoal matte enamel",
+        displayOrder: 1,
+      },
+      {
+        id: "s11",
+        productId: "prod-3",
+        key: "Included",
+        value: "Infuser mesh + cast iron trivet",
+        displayOrder: 2,
+      },
     ],
     images: [
       {
@@ -161,7 +215,7 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     discountValue: 0,
     discountStartsAt: null,
     discountEndsAt: null,
-    stockQty: null, // Made to order
+    stockQty: null,
     featured: false,
     active: true,
     createdAt: new Date("2026-10-04"),
@@ -169,9 +223,21 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     bannerPath:
       "https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?q=80&w=1200&auto=format&fit=crop",
     specs: [
-      { id: "s12", productId: "prod-4", key: "Material", value: "Solid C260 brass", displayOrder: 0 },
+      {
+        id: "s12",
+        productId: "prod-4",
+        key: "Material",
+        value: "Solid C260 brass",
+        displayOrder: 0,
+      },
       { id: "s13", productId: "prod-4", key: "Diameter", value: "180mm", displayOrder: 1 },
-      { id: "s14", productId: "prod-4", key: "Base", value: "Vegetable-tanned leather pad", displayOrder: 2 },
+      {
+        id: "s14",
+        productId: "prod-4",
+        key: "Base",
+        value: "Vegetable-tanned leather pad",
+        displayOrder: 2,
+      },
     ],
     images: [
       {
@@ -205,8 +271,20 @@ export const MOCK_PRODUCTS: MockProduct[] = [
       "https://images.unsplash.com/photo-1603006905003-be475563bc59?q=80&w=1200&auto=format&fit=crop",
     specs: [
       { id: "s15", productId: "prod-5", key: "Burn Time", value: "55 hours", displayOrder: 0 },
-      { id: "s16", productId: "prod-5", key: "Wax", value: "100% Coconut Soy Blend", displayOrder: 1 },
-      { id: "s17", productId: "prod-5", key: "Wick", value: "Unbleached organic cotton", displayOrder: 2 },
+      {
+        id: "s16",
+        productId: "prod-5",
+        key: "Wax",
+        value: "100% Coconut Soy Blend",
+        displayOrder: 1,
+      },
+      {
+        id: "s17",
+        productId: "prod-5",
+        key: "Wick",
+        value: "Unbleached organic cotton",
+        displayOrder: 2,
+      },
     ],
     images: [
       {
@@ -380,8 +458,7 @@ export const MOCK_REVIEWS = [
     productId: "prod-1",
     authorName: "Claire D.",
     rating: 5,
-    comment:
-      "Minimalist, weighty, and balanced. I use it every morning for espresso.",
+    comment: "Minimalist, weighty, and balanced. I use it every morning for espresso.",
     approved: true,
     createdAt: new Date("2026-10-12"),
   },

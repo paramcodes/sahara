@@ -1,13 +1,9 @@
-import fs from "fs/promises";
-import path from "path";
-import crypto from "crypto";
+import crypto from "node:crypto";
+import fs from "node:fs/promises";
+import path from "node:path";
 
 export interface StorageProvider {
-  save(
-    buffer: Buffer | Uint8Array,
-    originalFilename: string,
-    mimeType: string
-  ): Promise<string>;
+  save(buffer: Buffer | Uint8Array, originalFilename: string, mimeType: string): Promise<string>;
   delete(filePath: string): Promise<void>;
   getUrl(filePath: string): string;
 }
@@ -19,31 +15,21 @@ const MIME_TO_EXTENSION: Record<string, string> = {
   "image/webp": ".webp",
 };
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
 
 function verifyImageSignature(buffer: Buffer | Uint8Array, mimeType: string): boolean {
   if (buffer.length < 8) return false;
-  // JPEG: FF D8 FF
+
   if (mimeType.includes("jpeg") || mimeType.includes("jpg")) {
     return buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
   }
-  // PNG: 89 50 4E 47 0D 0A 1A 0A
+
   if (mimeType.includes("png")) {
-    return (
-      buffer[0] === 0x89 &&
-      buffer[1] === 0x50 &&
-      buffer[2] === 0x4e &&
-      buffer[3] === 0x47
-    );
+    return buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4e && buffer[3] === 0x47;
   }
-  // WebP: RIFF .... WEBP
+
   if (mimeType.includes("webp")) {
-    return (
-      buffer[0] === 0x52 &&
-      buffer[1] === 0x49 &&
-      buffer[2] === 0x46 &&
-      buffer[3] === 0x46
-    );
+    return buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
   }
   return false;
 }
@@ -53,9 +39,7 @@ export class LocalDiskProvider implements StorageProvider {
 
   constructor(uploadDir?: string) {
     this.uploadDir =
-      uploadDir ||
-      process.env.UPLOAD_DIR ||
-      path.join(process.cwd(), "public", "uploads");
+      uploadDir || process.env.UPLOAD_DIR || path.join(process.cwd(), "public", "uploads");
   }
 
   private async ensureDir() {
@@ -64,15 +48,13 @@ export class LocalDiskProvider implements StorageProvider {
 
   async save(
     buffer: Buffer | Uint8Array,
-    originalFilename: string,
-    mimeType: string
+    _originalFilename: string,
+    mimeType: string,
   ): Promise<string> {
     const normalizedMime = mimeType.toLowerCase();
     const safeExt = MIME_TO_EXTENSION[normalizedMime];
     if (!safeExt) {
-      throw new Error(
-        `Invalid file format "${mimeType}". Only JPG, PNG, and WebP are allowed.`
-      );
+      throw new Error(`Invalid file format "${mimeType}". Only JPG, PNG, and WebP are allowed.`);
     }
 
     if (buffer.length > MAX_FILE_SIZE_BYTES) {
@@ -85,7 +67,6 @@ export class LocalDiskProvider implements StorageProvider {
 
     await this.ensureDir();
 
-    // Derived strictly from MIME whitelist, user extension ignored
     const safeName = `${crypto.randomUUID()}${safeExt}`;
     const targetPath = path.resolve(this.uploadDir, safeName);
     if (!targetPath.startsWith(path.resolve(this.uploadDir))) {
@@ -94,12 +75,11 @@ export class LocalDiskProvider implements StorageProvider {
 
     await fs.writeFile(targetPath, buffer);
 
-    // Return public relative path
     return `/uploads/${safeName}`;
   }
 
   async delete(filePath: string): Promise<void> {
-    if (!filePath || !filePath.startsWith("/uploads/")) {
+    if (!filePath?.startsWith("/uploads/")) {
       return;
     }
     const safeName = path.basename(filePath);
@@ -109,9 +89,7 @@ export class LocalDiskProvider implements StorageProvider {
     }
     try {
       await fs.unlink(targetPath);
-    } catch {
-      // Ignore if file doesn't exist
-    }
+    } catch {}
   }
 
   getUrl(filePath: string): string {
@@ -119,5 +97,4 @@ export class LocalDiskProvider implements StorageProvider {
   }
 }
 
-// Default storage instance
 export const storage: StorageProvider = new LocalDiskProvider();

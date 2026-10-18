@@ -1,20 +1,19 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { getCartSessionId } from "../cart-session";
 import { getSession } from "../auth";
-import {
-  getOrCreateCart,
-  getCartWithItems,
-  addToCart,
-  updateCartItemQty,
-  removeCartItem,
-  clearCart,
-} from "../repos/cart";
+import { getCartSessionId } from "../cart-session";
 import { db, schema } from "../db";
-import { eq } from "drizzle-orm";
 import { MOCK_PRODUCTS } from "../mock-data";
+import {
+  addToCart,
+  getCartWithItems,
+  getOrCreateCart,
+  removeCartItem,
+  updateCartItemQty,
+} from "../repos/cart";
 
 async function resolveCart() {
   const [org] = await db.select().from(schema.orgs).limit(1);
@@ -23,11 +22,7 @@ async function resolveCart() {
   const session = await getSession();
   const sessionId = await getCartSessionId();
 
-  const cart = await getOrCreateCart(
-    org.id,
-    session?.user?.id,
-    sessionId
-  );
+  const cart = await getOrCreateCart(org.id, session?.user?.id, sessionId);
 
   return { cart, orgId: org.id };
 }
@@ -50,14 +45,13 @@ export async function addToCartAction(productId: string, qty: number = 1) {
 
   const { cart } = await resolveCart();
 
-  // Verify product is active
   const [product] = await db
     .select()
     .from(schema.products)
     .where(eq(schema.products.id, parsed.data.productId))
     .limit(1);
 
-  if (!product || !product.active) {
+  if (!product?.active) {
     throw new Error("Product is unavailable");
   }
 
@@ -103,7 +97,6 @@ export async function getCurrentCartData() {
       })),
     };
   } catch {
-    // Demo fallback: pre-populate 1 item so cart & checkout are immediately viewable in production
     return {
       cartId: "demo-cart-1",
       items: [

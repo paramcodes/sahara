@@ -1,19 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
-import { Stepper } from "../ui/Stepper";
+import { useState } from "react";
+import { removeCartItemAction, updateCartItemQtyAction } from "@/lib/actions/cart";
+import { calculateCartTotals, calculateProductPrice, formatCents } from "@/lib/pricing";
 import { Button } from "../ui/Button";
 import { EmptyState } from "../ui/EmptyState";
-import {
-  updateCartItemQtyAction,
-  removeCartItemAction,
-} from "@/lib/actions/cart";
-import {
-  formatCents,
-  calculateProductPrice,
-  calculateCartTotals,
-} from "@/lib/pricing";
+import { Stepper } from "../ui/Stepper";
 
 export interface CartProduct {
   id: string;
@@ -44,7 +37,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
     setItems((prev) =>
       prev
         .map((item) => (item.id === itemId ? { ...item, qty: newQty } : item))
-        .filter((item) => item.qty > 0)
+        .filter((item) => item.qty > 0),
     );
 
     await updateCartItemQtyAction(itemId, newQty);
@@ -69,13 +62,11 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
     );
   }
 
-  const totals = calculateCartTotals(
-    items.map((i) => ({ product: i.product, qty: i.qty }))
-  );
+  const totals = calculateCartTotals(items.map((i) => ({ product: i.product, qty: i.qty })));
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
-      {/* Cart Items List */}
+      {}
       <div className="lg:col-span-2 flex flex-col gap-4">
         {items.map((item) => {
           const pricing = calculateProductPrice(item.product);
@@ -126,7 +117,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
                 </div>
               </div>
 
-              {/* Quantity Stepper & Remove */}
+              {}
               <div className="flex items-center gap-3">
                 <Stepper
                   value={item.qty}
@@ -149,11 +140,9 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
         })}
       </div>
 
-      {/* Summary Box */}
+      {}
       <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-5 sticky top-20">
-        <h2 className="text-base font-semibold text-[var(--ink)] tracking-tight">
-          Order Summary
-        </h2>
+        <h2 className="text-base font-semibold text-[var(--ink)] tracking-tight">Order Summary</h2>
 
         <div className="flex flex-col gap-2.5 text-xs sm:text-sm text-[var(--ink-secondary)]">
           <div className="flex justify-between">
@@ -166,9 +155,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
           {totals.discountCents > 0 && (
             <div className="flex justify-between text-emerald-700 font-medium">
               <span>Discounts Applied</span>
-              <span className="tabular-nums">
-                -{formatCents(totals.discountCents)}
-              </span>
+              <span className="tabular-nums">-{formatCents(totals.discountCents)}</span>
             </div>
           )}
 
@@ -179,9 +166,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
 
           <div className="pt-3 border-t border-black/[0.06] flex justify-between text-base font-semibold text-[var(--ink)]">
             <span>Total</span>
-            <span className="tabular-nums">
-              {formatCents(totals.totalCents)}
-            </span>
+            <span className="tabular-nums">{formatCents(totals.totalCents)}</span>
           </div>
         </div>
 

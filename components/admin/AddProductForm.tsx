@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
+import { createProductAction } from "@/lib/actions/admin-products";
 import { Button } from "../ui/Button";
 import { useToast } from "../ui/Toast";
-import { createProductAction } from "@/lib/actions/admin-products";
 
 export function AddProductForm() {
   const router = useRouter();
@@ -17,9 +18,8 @@ export function AddProductForm() {
   const [description, setDescription] = useState("");
   const [stockQty, setStockQty] = useState<string>("");
   const [bannerPath, setBannerPath] = useState("");
-  const [featured, setFeatured] = useState(false);
+  const [featured, _setFeatured] = useState(false);
 
-  // Dynamic specs
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>([
     { key: "Material", value: "" },
     { key: "Dimensions", value: "" },
@@ -58,9 +58,7 @@ export function AddProductForm() {
   };
 
   const handleSpecChange = (index: number, field: "key" | "value", val: string) => {
-    setSpecs((prev) =>
-      prev.map((s, idx) => (idx === index ? { ...s, [field]: val } : s))
-    );
+    setSpecs((prev) => prev.map((s, idx) => (idx === index ? { ...s, [field]: val } : s)));
   };
 
   const handleRemoveSpec = (index: number) => {
@@ -75,7 +73,7 @@ export function AddProductForm() {
     }
 
     const priceCents = Math.round(parseFloat(priceDollars || "0") * 100);
-    if (isNaN(priceCents) || priceCents <= 0) {
+    if (Number.isNaN(priceCents) || priceCents <= 0) {
       toast("Please enter a valid price", "error");
       return;
     }
@@ -111,7 +109,7 @@ export function AddProductForm() {
       onSubmit={handleSubmit}
       className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-8 max-w-2xl"
     >
-      {/* 1. Photo First per spec */}
+      {}
       <div>
         <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider mb-2">
           1. Product Photography (Photo First)
@@ -119,19 +117,13 @@ export function AddProductForm() {
         <div className="flex items-center gap-6">
           <div className="w-28 h-28 rounded-2xl bg-black/[0.03] border-2 border-dashed border-black/[0.1] flex items-center justify-center overflow-hidden shrink-0">
             {bannerPath ? (
-              <img
-                src={bannerPath}
-                alt="Product preview"
-                className="w-full h-full object-cover"
-              />
+              <img src={bannerPath} alt="Product preview" className="w-full h-full object-cover" />
             ) : isUploading ? (
               <span className="text-xs text-[var(--ink-secondary)] animate-pulse">
                 Uploading...
               </span>
             ) : (
-              <span className="text-xs text-gray-400 text-center px-2">
-                No photo chosen
-              </span>
+              <span className="text-xs text-gray-400 text-center px-2">No photo chosen</span>
             )}
           </div>
 
@@ -161,7 +153,7 @@ export function AddProductForm() {
         </div>
       </div>
 
-      {/* 2. Core Info */}
+      {}
       <div className="flex flex-col gap-4">
         <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider">
           2. Essential Details
@@ -225,7 +217,7 @@ export function AddProductForm() {
         </div>
       </div>
 
-      {/* 3. Specifications */}
+      {}
       <div>
         <div className="flex items-center justify-between mb-3">
           <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider">
@@ -242,7 +234,7 @@ export function AddProductForm() {
 
         <div className="flex flex-col gap-2">
           {specs.map((spec, idx) => (
-            <div key={idx} className="flex gap-2 items-center">
+            <div key={`spec-${idx}`} className="flex gap-2 items-center">
               <input
                 type="text"
                 placeholder="Key (e.g. Material)"
@@ -269,7 +261,7 @@ export function AddProductForm() {
         </div>
       </div>
 
-      {/* Submit */}
+      {}
       <div className="pt-4 border-t border-black/[0.06] flex items-center justify-between">
         <Button
           type="submit"

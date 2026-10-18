@@ -1,14 +1,10 @@
 "use server";
 
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import { requireAdmin } from "../auth";
-import {
-  createProduct,
-  updateProduct,
-  deleteProduct,
-} from "../repos/products";
 import { db, schema } from "../db";
+import { createProduct, deleteProduct, updateProduct } from "../repos/products";
 
 const ProductCreateSchema = z.object({
   name: z.string().min(2, "Product name is required"),
@@ -23,7 +19,7 @@ const ProductCreateSchema = z.object({
 });
 
 export async function createProductAction(data: z.infer<typeof ProductCreateSchema>) {
-  const session = await requireAdmin();
+  const _session = await requireAdmin();
   const validated = ProductCreateSchema.safeParse(data);
 
   if (!validated.success) {
@@ -72,7 +68,7 @@ export async function updateProductDiscountAction(
   data: {
     discountType: "none" | "percent" | "fixed";
     discountValue: number;
-  }
+  },
 ) {
   await requireAdmin();
   const parsed = DiscountUpdateSchema.safeParse({ productId, ...data });
@@ -106,7 +102,6 @@ export async function deleteProductAction(id: string) {
   try {
     await deleteProduct(id);
   } catch (err: any) {
-    // If Postgres FK constraint fails because of historical orders, safely deactivate
     if (err?.code === "23503") {
       await updateProduct(id, { active: false });
       revalidatePath("/", "layout");

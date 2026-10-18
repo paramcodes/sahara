@@ -54,3 +54,16 @@ Buyer Browser / Admin Browser
 - **Cart Scoping**: Cart mutations (`lib/actions/cart.ts`) enforce boundary checks with Zod and scope database updates strictly to the active caller's session cart to prevent IDOR tampering.
 - **High-Entropy Identifiers**: Order numbers incorporate random hexadecimal tokens to eliminate sequential enumeration.
 - **Fail-Fast Secrets**: In production environments, missing critical secrets (e.g. `BETTER_AUTH_SECRET`) fail immediately at startup rather than silently falling back to insecure defaults.
+
+## 4. State ownership
+
+Three owners, no overlaps:
+- **Store**: playback/UI ephemera (none in this app beyond cart badge).
+- **Query**: server state + library (products, cart, orders via Drizzle/server actions).
+- **Component**: local UI state (search input, sheet open, etc.).
+
+## 5. Repository seam
+
+Persisted domains (products, orders, cart, storage) go through repository modules in `lib/repos/*`
+and `lib/storage.ts`. Ad-hoc storage is not allowed; localStorage adapter (if added) must be
+Zod-validated and versioned.

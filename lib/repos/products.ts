@@ -1,6 +1,6 @@
+import crypto from "node:crypto";
+import { and, asc, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { db, schema } from "../db";
-import { eq, and, ilike, or, desc, asc, sql } from "drizzle-orm";
-import crypto from "crypto";
 import { MOCK_PRODUCTS } from "../mock-data";
 
 export async function getProducts(options?: {
@@ -28,8 +28,8 @@ export async function getProducts(options?: {
           SELECT 1 FROM ${schema.productSpecs}
           WHERE ${schema.productSpecs.productId} = ${schema.products.id}
           AND (${schema.productSpecs.key} ILIKE ${q} OR ${schema.productSpecs.value} ILIKE ${q})
-        )`
-      )
+        )`,
+      ),
     );
   }
 
@@ -41,8 +41,7 @@ export async function getProducts(options?: {
       .orderBy(desc(schema.products.featured), desc(schema.products.createdAt));
 
     return items;
-  } catch (err) {
-    // Graceful fallback to rich mock data if database is disconnected
+  } catch (_err) {
     let list = [...MOCK_PRODUCTS];
     if (options?.activeOnly !== false) {
       list = list.filter((p) => p.active);
@@ -53,11 +52,7 @@ export async function getProducts(options?: {
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.description.toLowerCase().includes(q) ||
-          p.specs.some(
-            (s) =>
-              s.key.toLowerCase().includes(q) ||
-              s.value.toLowerCase().includes(q)
-          )
+          p.specs.some((s) => s.key.toLowerCase().includes(q) || s.value.toLowerCase().includes(q)),
       );
     }
     return list;
@@ -79,7 +74,6 @@ export async function getProductBySlug(slug: string, orgId?: string) {
 
     if (!product) return null;
 
-    // Fetch specs and images
     const specs = await db
       .select()
       .from(schema.productSpecs)
@@ -97,7 +91,7 @@ export async function getProductBySlug(slug: string, orgId?: string) {
       specs,
       images,
     };
-  } catch (err) {
+  } catch (_err) {
     const found = MOCK_PRODUCTS.find((p) => p.slug === slug);
     return found || null;
   }
@@ -212,7 +206,7 @@ export async function updateProduct(
   id: string,
   data: Partial<typeof schema.products.$inferInsert> & {
     specs?: { key: string; value: string }[];
-  }
+  },
 ) {
   await db.transaction(async (tx) => {
     const { specs, ...fields } = data;
@@ -224,9 +218,7 @@ export async function updateProduct(
     }
 
     if (specs !== undefined) {
-      await tx
-        .delete(schema.productSpecs)
-        .where(eq(schema.productSpecs.productId, id));
+      await tx.delete(schema.productSpecs).where(eq(schema.productSpecs.productId, id));
 
       for (let i = 0; i < specs.length; i++) {
         const s = specs[i];

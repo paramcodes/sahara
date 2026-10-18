@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
+import { placeOrderAction } from "@/lib/actions/orders";
 import { Button } from "../ui/Button";
 import { useToast } from "../ui/Toast";
-import { placeOrderAction } from "@/lib/actions/orders";
 
 export function CheckoutForm() {
   const router = useRouter();
@@ -19,9 +20,7 @@ export function CheckoutForm() {
     notes: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
@@ -46,9 +45,7 @@ export function CheckoutForm() {
       className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-6"
     >
       <div>
-        <h2 className="text-lg font-semibold text-[var(--ink)] tracking-tight">
-          Delivery Details
-        </h2>
+        <h2 className="text-lg font-semibold text-[var(--ink)] tracking-tight">Delivery Details</h2>
         <p className="text-xs text-[var(--ink-secondary)] mt-0.5">
           We will contact you via WhatsApp or phone to confirm dispatch.
         </p>

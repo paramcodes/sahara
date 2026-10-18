@@ -1,16 +1,15 @@
+import { desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
-import { getProductBySlug } from "@/lib/repos/products";
+import { AddToCartForm } from "@/components/storefront/AddToCartForm";
+import { Footer } from "@/components/storefront/Footer";
+import { Navbar } from "@/components/storefront/Navbar";
+import { ReviewSection } from "@/components/storefront/ReviewSection";
+import { Badge } from "@/components/ui/Badge";
 import { getCurrentCartData } from "@/lib/actions/cart";
 import { db, schema } from "@/lib/db";
-import { eq, desc } from "drizzle-orm";
-import { Navbar } from "@/components/storefront/Navbar";
-import { Footer } from "@/components/storefront/Footer";
-import { Badge } from "@/components/ui/Badge";
-import { AddToCartForm } from "@/components/storefront/AddToCartForm";
-import { ReviewSection } from "@/components/storefront/ReviewSection";
-import { formatCents, calculateProductPrice } from "@/lib/pricing";
 import { MOCK_REVIEWS } from "@/lib/mock-data";
-
+import { calculateProductPrice, formatCents } from "@/lib/pricing";
+import { getProductBySlug } from "@/lib/repos/products";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -27,8 +26,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const { items: cartItems } = await getCurrentCartData();
   const totalCartQty = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
-  // Fetch reviews for this product with fallback
-  let reviews: { id: string; authorName: string; rating: number; comment: string; createdAt: Date }[] = [];
+  let reviews: {
+    id: string;
+    authorName: string;
+    rating: number;
+    comment: string;
+    createdAt: Date;
+  }[] = [];
   try {
     const rows = await db
       .select()
@@ -52,17 +56,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
       <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* Gallery / Photos */}
+          {}
           <div className="flex flex-col gap-4">
             <div className="aspect-square w-full rounded-3xl bg-white border border-black/[0.06] overflow-hidden shadow-sm flex items-center justify-center">
-              <img
-                src={heroImage}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+              <img src={heroImage} alt={product.name} className="w-full h-full object-cover" />
             </div>
 
-            {/* Thumbnail row if multiple */}
+            {}
             {product.images.length > 1 && (
               <div className="flex gap-3 overflow-x-auto pb-2">
                 {product.images.map((img) => (
@@ -81,7 +81,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Product Details & Actions */}
+          {}
           <div className="flex flex-col">
             <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] mb-2">
               Sahara Collection
@@ -91,7 +91,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               {product.name}
             </h1>
 
-            {/* Pricing */}
+            {}
             <div className="flex items-center gap-3 mb-6">
               {pricing.isActive ? (
                 <>
@@ -114,12 +114,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
               )}
             </div>
 
-            {/* Description */}
+            {}
             <p className="text-sm sm:text-base text-[var(--ink-secondary)] leading-relaxed mb-8">
               {product.description}
             </p>
 
-            {/* Specs Table */}
+            {}
             {product.specs && product.specs.length > 0 && (
               <div className="mb-8 rounded-2xl bg-white border border-black/[0.06] overflow-hidden p-4">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-tertiary)] mb-3">
@@ -131,29 +131,22 @@ export default async function ProductDetailPage({ params }: PageProps) {
                       key={spec.id}
                       className="py-2.5 flex items-center justify-between text-xs sm:text-sm"
                     >
-                      <dt className="text-[var(--ink-secondary)] font-medium">
-                        {spec.key}
-                      </dt>
-                      <dd className="text-[var(--ink)] font-normal text-right">
-                        {spec.value}
-                      </dd>
+                      <dt className="text-[var(--ink-secondary)] font-medium">{spec.key}</dt>
+                      <dd className="text-[var(--ink)] font-normal text-right">{spec.value}</dd>
                     </div>
                   ))}
                 </dl>
               </div>
             )}
 
-            {/* Order / Add to Bag */}
+            {}
             <div className="p-6 rounded-2xl bg-white border border-black/[0.06] shadow-sm">
-              <AddToCartForm
-                productId={product.id}
-                stockQty={product.stockQty}
-              />
+              <AddToCartForm productId={product.id} stockQty={product.stockQty} />
             </div>
           </div>
         </div>
 
-        {/* Customer Reviews */}
+        {}
         <ReviewSection
           productId={product.id}
           reviews={reviews.map((r) => ({

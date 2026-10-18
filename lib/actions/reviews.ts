@@ -1,16 +1,24 @@
 "use server";
 
-import { z } from "zod";
+import crypto from "node:crypto";
 import { revalidatePath } from "next/cache";
-import { db, schema } from "../db";
+import { z } from "zod";
 import { getSession } from "../auth";
-import crypto from "crypto";
+import { db, schema } from "../db";
 
 const ReviewSchema = z.object({
   productId: z.string().min(1),
-  authorName: z.string().trim().min(2, "Name must be at least 2 characters").max(64, "Name must be under 64 characters"),
+  authorName: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters")
+    .max(64, "Name must be under 64 characters"),
   rating: z.number().int().min(1).max(5),
-  comment: z.string().trim().min(4, "Review must be at least 4 characters").max(2000, "Review must be under 2000 characters"),
+  comment: z
+    .string()
+    .trim()
+    .min(4, "Review must be at least 4 characters")
+    .max(2000, "Review must be under 2000 characters"),
 });
 
 export async function postReviewAction(data: {

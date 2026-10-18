@@ -1,11 +1,11 @@
 "use server";
 
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { createOrder, updateOrderStatus, OrderStatus } from "../repos/orders";
-import { getCurrentCartData } from "./cart";
+import { z } from "zod";
 import { getSession, requireAdmin } from "../auth";
 import { db, schema } from "../db";
+import { createOrder, type OrderStatus, updateOrderStatus } from "../repos/orders";
+import { getCurrentCartData } from "./cart";
 
 const CheckoutSchema = z.object({
   customerName: z.string().min(2, "Name must be at least 2 characters"),
@@ -67,8 +67,7 @@ export async function placeOrderAction(data: {
       orderId: result.orderId,
       orderNumber: result.orderNumber,
     };
-  } catch (err: any) {
-    // Demo fallback if database is disconnected
+  } catch (_err: any) {
     return {
       success: true,
       orderId: "order-1",
@@ -82,7 +81,7 @@ const OrderStatusSchema = z.enum(["placed", "confirmed", "fulfilled", "cancelled
 export async function updateOrderStatusAction(
   orderId: string,
   newStatus: OrderStatus,
-  notes?: string
+  notes?: string,
 ) {
   const session = await requireAdmin();
 
@@ -100,7 +99,7 @@ export async function updateOrderStatusAction(
       orderId,
       parsedStatus.data,
       { id: session.user.id, role: "admin" },
-      notes
+      notes,
     );
 
     revalidatePath("/admin");

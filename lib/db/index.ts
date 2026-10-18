@@ -3,10 +3,8 @@ import { Pool } from "pg";
 import * as schema from "./schema";
 
 const connectionString =
-  process.env.DATABASE_URL ||
-  "postgresql://sahara:sahara_dev_password@localhost:5432/sahara";
+  process.env.DATABASE_URL || "postgresql://sahara:sahara_dev_password@localhost:5432/sahara";
 
-// Global pool caching in development to avoid exhausting connections
 const globalForDb = globalThis as unknown as {
   pool: Pool | undefined;
 };

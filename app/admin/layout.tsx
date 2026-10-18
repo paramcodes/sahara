@@ -1,18 +1,12 @@
-import React from "react";
 import Link from "next/link";
+import type React from "react";
 import { requireAdmin } from "@/lib/auth";
 
-
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   let session = null;
   try {
     session = await requireAdmin();
   } catch {
-    // Demo fallback for cloud preview before remote DB is attached
     session = {
       user: {
         id: "demo-admin",
@@ -24,10 +18,10 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] flex flex-col sm:flex-row">
-      {/* Sidebar */}
+      {}
       <aside className="w-full sm:w-60 bg-white border-r border-black/[0.06] p-4 sm:p-6 shrink-0 flex flex-col justify-between">
         <div className="flex flex-col gap-6">
-          {/* Logo & Org */}
+          {}
           <div className="flex items-center justify-between">
             <Link
               href="/"
@@ -38,7 +32,7 @@ export default async function AdminLayout({
             </Link>
           </div>
 
-          {/* Nav links */}
+          {}
           <nav className="flex sm:flex-col gap-1 overflow-x-auto pb-2 sm:pb-0 text-xs sm:text-sm font-medium">
             <Link
               href="/admin"
@@ -67,7 +61,7 @@ export default async function AdminLayout({
           </nav>
         </div>
 
-        {/* Footer info & view store */}
+        {}
         <div className="pt-4 border-t border-black/[0.06] hidden sm:flex flex-col gap-2">
           <span className="text-[11px] text-[var(--ink-tertiary)] truncate">
             Logged in as {session.user.email}
@@ -81,10 +75,8 @@ export default async function AdminLayout({
         </div>
       </aside>
 
-      {/* Main Admin Surface */}
-      <main className="flex-1 p-4 sm:p-8 lg:p-10 max-w-6xl overflow-y-auto">
-        {children}
-      </main>
+      {}
+      <main className="flex-1 p-4 sm:p-8 lg:p-10 max-w-6xl overflow-y-auto">{children}</main>
     </div>
   );
 }

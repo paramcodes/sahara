@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 
 export interface SegmentOption<T extends string> {
   value: T;
@@ -21,10 +21,7 @@ export function Segmented<T extends string>({
   className = "",
 }: SegmentedProps<T>) {
   return (
-    <div
-      role="tablist"
-      className={`inline-flex rounded-xl bg-black/[0.06] p-1 gap-1 ${className}`}
-    >
+    <div role="tablist" className={`inline-flex rounded-xl bg-black/[0.06] p-1 gap-1 ${className}`}>
       {options.map((option) => {
         const isSelected = option.value === value;
         return (

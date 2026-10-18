@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "../ui/Button";
-import { Badge } from "../ui/Badge";
-import { useToast } from "../ui/Toast";
-import { formatCents } from "@/lib/pricing";
+import type React from "react";
+import { useState } from "react";
 import { updateProductDiscountAction } from "@/lib/actions/admin-products";
+import { formatCents } from "@/lib/pricing";
+import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button";
+import { useToast } from "../ui/Toast";
 
 export interface DiscountProductItem {
   id: string;
@@ -17,21 +18,15 @@ export interface DiscountProductItem {
   discountEndsAt: Date | string | null;
 }
 
-export function DiscountsManager({
-  products,
-}: {
-  products: DiscountProductItem[];
-}) {
+export function DiscountsManager({ products }: { products: DiscountProductItem[] }) {
   const { toast } = useToast();
-  const [selectedProduct, setSelectedProduct] = useState<string>(
-    products[0]?.id || ""
-  );
+  const [selectedProduct, setSelectedProduct] = useState<string>(products[0]?.id || "");
   const [discountType, setDiscountType] = useState<"percent" | "fixed">("percent");
   const [discountValue, setDiscountValue] = useState<string>("10");
   const [isSaving, setIsSaving] = useState(false);
 
   const activeDiscounts = products.filter(
-    (p) => p.discountType && p.discountType !== "none" && (p.discountValue || 0) > 0
+    (p) => p.discountType && p.discountType !== "none" && (p.discountValue || 0) > 0,
   );
 
   const handleApplyDiscount = async (e: React.FormEvent) => {
@@ -42,7 +37,7 @@ export function DiscountsManager({
     const val = parseInt(discountValue, 10);
     const res = await updateProductDiscountAction(selectedProduct, {
       discountType,
-      discountValue: isNaN(val) ? 0 : val,
+      discountValue: Number.isNaN(val) ? 0 : val,
     });
 
     setIsSaving(false);
@@ -67,7 +62,7 @@ export function DiscountsManager({
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Active Discounts Table */}
+      {}
       <div className="rounded-3xl bg-white border border-black/[0.06] shadow-sm overflow-hidden p-6">
         <h2 className="text-base font-semibold text-[var(--ink)] mb-4">
           Active Promotional Rules ({activeDiscounts.length})
@@ -80,14 +75,9 @@ export function DiscountsManager({
         ) : (
           <div className="divide-y divide-black/[0.04]">
             {activeDiscounts.map((p) => (
-              <div
-                key={p.id}
-                className="py-3 flex items-center justify-between text-xs sm:text-sm"
-              >
+              <div key={p.id} className="py-3 flex items-center justify-between text-xs sm:text-sm">
                 <div>
-                  <span className="font-medium text-[var(--ink)] block">
-                    {p.name}
-                  </span>
+                  <span className="font-medium text-[var(--ink)] block">{p.name}</span>
                   <span className="text-xs text-[var(--ink-tertiary)]">
                     Regular: {formatCents(p.priceCents)}
                   </span>
@@ -98,11 +88,7 @@ export function DiscountsManager({
                       ? `${p.discountValue}% OFF`
                       : `-$${((p.discountValue || 0) / 100).toFixed(2)}`}
                   </Badge>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => handleClearDiscount(p.id)}
-                  >
+                  <Button size="sm" variant="ghost" onClick={() => handleClearDiscount(p.id)}>
                     Clear
                   </Button>
                 </div>
@@ -112,14 +98,12 @@ export function DiscountsManager({
         )}
       </div>
 
-      {/* Add New Promotion */}
+      {}
       <form
         onSubmit={handleApplyDiscount}
         className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-6 max-w-xl"
       >
-        <h2 className="text-base font-semibold text-[var(--ink)]">
-          Configure Product Promotion
-        </h2>
+        <h2 className="text-base font-semibold text-[var(--ink)]">Configure Product Promotion</h2>
 
         <div>
           <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5">
@@ -145,9 +129,7 @@ export function DiscountsManager({
             </label>
             <select
               value={discountType}
-              onChange={(e) =>
-                setDiscountType(e.target.value as "percent" | "fixed")
-              }
+              onChange={(e) => setDiscountType(e.target.value as "percent" | "fixed")}
               className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)]"
             >
               <option value="percent">Percentage Off (%)</option>

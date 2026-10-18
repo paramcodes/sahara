@@ -1,5 +1,5 @@
-import React from "react";
 import Link from "next/link";
+import type React from "react";
 import { Button } from "./Button";
 
 export interface EmptyStateProps {
@@ -38,35 +38,26 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
             strokeWidth="1.5"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M20 12H4m8-8v16"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4m8-8v16" />
           </svg>
         </div>
       )}
 
-      <h3 className="text-lg font-semibold text-[var(--ink)] tracking-tight mb-1">
-        {title}
-      </h3>
+      <h3 className="text-lg font-semibold text-[var(--ink)] tracking-tight mb-1">{title}</h3>
       <p className="text-sm text-[var(--ink-secondary)] mb-6 max-w-xs leading-relaxed">
         {description}
       </p>
 
-      {actionText && (
-        <>
-          {actionHref ? (
-            <Link href={actionHref}>
-              <Button size="md">{actionText}</Button>
-            </Link>
-          ) : (
-            <Button size="md" onClick={onAction}>
-              {actionText}
-            </Button>
-          )}
-        </>
-      )}
+      {actionText &&
+        (actionHref ? (
+          <Link href={actionHref}>
+            <Button size="md">{actionText}</Button>
+          </Link>
+        ) : (
+          <Button size="md" onClick={onAction}>
+            {actionText}
+          </Button>
+        ))}
     </div>
   );
 };

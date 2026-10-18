@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 export interface BadgeProps {
   children: React.ReactNode;
@@ -6,11 +6,7 @@ export interface BadgeProps {
   className?: string;
 }
 
-export const Badge: React.FC<BadgeProps> = ({
-  children,
-  variant = "neutral",
-  className = "",
-}) => {
+export const Badge: React.FC<BadgeProps> = ({ children, variant = "neutral", className = "" }) => {
   const variantStyles = {
     neutral: "bg-black/[0.05] text-[var(--ink-secondary)]",
     accent: "bg-[var(--accent-subtle)] text-[var(--accent)] font-medium",

@@ -1,5 +1,5 @@
-import React from "react";
 import Link from "next/link";
+import type React from "react";
 import { Button } from "../ui/Button";
 
 export interface HeroBannerProps {
@@ -17,14 +17,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
 }) => {
   return (
     <section className="relative w-full h-[540px] sm:h-[620px] flex items-center justify-center overflow-hidden bg-[#e5e5ea]">
-      {/* Background Image with subtle gradient overlay */}
+      {}
       <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out hover:scale-105"
         style={{ backgroundImage: `url(${bannerImage})` }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/10" />
 
-      {/* Content Container */}
+      {}
       <div className="relative z-10 max-w-3xl mx-auto px-6 text-center text-white flex flex-col items-center">
         <span className="text-xs uppercase tracking-[0.25em] font-medium text-white/80 mb-3">
           {tagline}

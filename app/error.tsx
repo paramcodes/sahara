@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
 import Link from "next/link";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/Button";
 
 export default function GlobalError({

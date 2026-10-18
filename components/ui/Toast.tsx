@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import type React from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 export interface ToastMessage {
   id: string;
@@ -18,22 +19,17 @@ const ToastContext = createContext<ToastContextType>({
 
 export const useToast = () => useContext(ToastContext);
 
-export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const toast = useCallback(
-    (text: string, type: "success" | "error" | "info" = "success") => {
-      const id = Math.random().toString(36).substring(2, 9);
-      setToasts((prev) => [...prev, { id, type, text }]);
+  const toast = useCallback((text: string, type: "success" | "error" | "info" = "success") => {
+    const id = Math.random().toString(36).substring(2, 9);
+    setToasts((prev) => [...prev, { id, type, text }]);
 
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== id));
-      }, 3500);
-    },
-    []
-  );
+    setTimeout(() => {
+      setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, 3500);
+  }, []);
 
   return (
     <ToastContext.Provider value={{ toast }}>
@@ -49,8 +45,8 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
               t.type === "success"
                 ? "bg-white/95 border-emerald-100 text-[var(--ink)]"
                 : t.type === "error"
-                ? "bg-white/95 border-red-100 text-[var(--error)]"
-                : "bg-white/95 border-black/[0.08] text-[var(--ink)]"
+                  ? "bg-white/95 border-red-100 text-[var(--error)]"
+                  : "bg-white/95 border-black/[0.08] text-[var(--ink)]"
             }`}
           >
             {t.type === "success" && (

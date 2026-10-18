@@ -1,5 +1,3 @@
-import React from "react";
-
 export function AnnouncementBar({ text }: { text?: string }) {
   if (!text) return null;
   return (

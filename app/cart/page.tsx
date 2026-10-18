@@ -1,8 +1,7 @@
-import { getCurrentCartData } from "@/lib/actions/cart";
-import { Navbar } from "@/components/storefront/Navbar";
-import { Footer } from "@/components/storefront/Footer";
 import { CartView } from "@/components/storefront/CartView";
-
+import { Footer } from "@/components/storefront/Footer";
+import { Navbar } from "@/components/storefront/Navbar";
+import { getCurrentCartData } from "@/lib/actions/cart";
 
 export default async function CartPage() {
   const { items } = await getCurrentCartData();

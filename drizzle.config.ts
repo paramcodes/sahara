@@ -5,6 +5,7 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL || "postgresql://sahara:sahara_dev_password@localhost:5432/sahara",
+    url:
+      process.env.DATABASE_URL || "postgresql://sahara:sahara_dev_password@localhost:5432/sahara",
   },
 });

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!node_modules",
+      "!.next",
+      "!dist",
+      "!coverage",
+      "!artifacts",
+      "!.worktrees",
+      "!test-results",
+      "!playwright-report"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "a11y": { "preset": "none" },
+      "correctness": { "preset": "recommended", "noUnusedVariables": "error" },
+      "suspicious": {
+        "preset": "recommended",
+        "noConsole": { "level": "warn", "options": { "allow": ["log", "error", "warn"] } }
+      },
+      "style": { "preset": "recommended", "useConst": "error" },
+      "performance": { "preset": "none" }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "trailingCommas": "all",
+      "semicolons": "always"
+    }
+  },
+  "css": { "parser": { "tailwindDirectives": true }, "formatter": { "enabled": true } },
+  "overrides": [
+    {
+      "includes": ["app/layout.tsx"],
+      "linter": { "rules": { "security": { "noDangerouslySetInnerHtml": "off" } } }
+    },
+    {
+      "includes": ["app/globals.css"],
+      "linter": { "rules": { "complexity": { "noImportantStyles": "off" } } }
+    },
+    {
+      "includes": ["components/admin/AddProductForm.tsx"],
+      "linter": { "rules": { "suspicious": { "noArrayIndexKey": "off" } } }
+    },
+    {
+      "includes": ["app/docs/page.tsx"],
+      "linter": { "rules": { "suspicious": { "noArrayIndexKey": "off" } } }
+    },
+    {
+      "includes": ["scripts/check-comments.mjs"],
+      "linter": { "rules": { "suspicious": { "noConsole": "off" } } }
+    }
+  ]
+}

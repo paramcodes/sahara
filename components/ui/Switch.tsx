@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import type React from "react";
 
 export interface SwitchProps {
   checked: boolean;
@@ -40,9 +40,7 @@ export const Switch: React.FC<SwitchProps> = ({
           }`}
         />
       </button>
-      {label && (
-        <span className="text-sm font-medium text-[var(--ink)]">{label}</span>
-      )}
+      {label && <span className="text-sm font-medium text-[var(--ink)]">{label}</span>}
     </label>
   );
 };

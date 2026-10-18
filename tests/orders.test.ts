@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { canTransition } from "../lib/repos/orders";
 
 describe("Order State Machine", () => {

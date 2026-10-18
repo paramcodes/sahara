@@ -1,16 +1,16 @@
+import crypto from "node:crypto";
+import { and, desc, eq } from "drizzle-orm";
 import { db, schema } from "../db";
-import { eq, desc, and } from "drizzle-orm";
-import crypto from "crypto";
-import { createOrderItemSnapshot, calculateCartTotals } from "../pricing";
 import { MOCK_ORDERS } from "../mock-data";
+import { calculateCartTotals, createOrderItemSnapshot } from "../pricing";
 
 export type OrderStatus = "placed" | "confirmed" | "fulfilled" | "cancelled";
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   placed: ["confirmed", "cancelled"],
   confirmed: ["fulfilled", "cancelled"],
-  fulfilled: [], // terminal
-  cancelled: [], // terminal
+  fulfilled: [],
+  cancelled: [],
 };
 
 export function canTransition(current: OrderStatus, target: OrderStatus): boolean {
@@ -44,7 +44,6 @@ export async function createOrder(data: {
   const now = new Date();
 
   return await db.transaction(async (tx) => {
-    // 1. Fetch fresh product data inside transaction to avoid stale prices or inactive items
     const freshItems: {
       product: typeof schema.products.$inferSelect;
       qty: number;
@@ -57,22 +56,16 @@ export async function createOrder(data: {
         .where(eq(schema.products.id, item.product.id))
         .limit(1);
 
-      if (!freshProduct || !freshProduct.active) {
+      if (!freshProduct?.active) {
+        throw new Error(`Product "${item.product.name}" is currently unavailable.`);
+      }
+
+      if (freshProduct.stockQty !== null && freshProduct.stockQty < item.qty) {
         throw new Error(
-          `Product "${item.product.name}" is currently unavailable.`
+          `Insufficient stock for "${freshProduct.name}". Only ${freshProduct.stockQty} remaining.`,
         );
       }
 
-      if (
-        freshProduct.stockQty !== null &&
-        freshProduct.stockQty < item.qty
-      ) {
-        throw new Error(
-          `Insufficient stock for "${freshProduct.name}". Only ${freshProduct.stockQty} remaining.`
-        );
-      }
-
-      // Decrement stock
       if (freshProduct.stockQty !== null) {
         await tx
           .update(schema.products)
@@ -85,10 +78,9 @@ export async function createOrder(data: {
 
     const totals = calculateCartTotals(freshItems, now);
     const snapshots = freshItems.map((item) =>
-      createOrderItemSnapshot(item.product, item.qty, now)
+      createOrderItemSnapshot(item.product, item.qty, now),
     );
 
-    // 2. Insert order
     await tx.insert(schema.orders).values({
       id: orderId,
       orgId: data.orgId,
@@ -105,7 +97,6 @@ export async function createOrder(data: {
       status: "placed",
     });
 
-    // 3. Insert order item snapshots
     for (const snap of snapshots) {
       await tx.insert(schema.orderItems).values({
         id: crypto.randomUUID(),
@@ -119,7 +110,6 @@ export async function createOrder(data: {
       });
     }
 
-    // 4. Record initial status history
     await tx.insert(schema.orderStatusHistory).values({
       id: crypto.randomUUID(),
       orderId,
@@ -129,11 +119,8 @@ export async function createOrder(data: {
       notes: "Order placed by customer via store request.",
     });
 
-    // 5. Clear cart if cartId provided
     if (data.cartId) {
-      await tx
-        .delete(schema.cartItems)
-        .where(eq(schema.cartItems.cartId, data.cartId));
+      await tx.delete(schema.cartItems).where(eq(schema.cartItems.cartId, data.cartId));
     }
 
     return {
@@ -197,7 +184,7 @@ export async function getOrderByNumber(orderNumber: string) {
       items,
       history,
     };
-  } catch (err) {
+  } catch (_err) {
     const found = MOCK_ORDERS.find((o) => o.orderNumber === orderNumber);
     return found || null;
   }
@@ -228,7 +215,7 @@ export async function getOrders(options?: {
       .orderBy(desc(schema.orders.createdAt));
 
     return list;
-  } catch (err) {
+  } catch (_err) {
     let list = MOCK_ORDERS;
     if (options?.status) {
       list = list.filter((o) => o.status === options.status);
@@ -241,7 +228,7 @@ export async function updateOrderStatus(
   orderId: string,
   newStatus: OrderStatus,
   actor: { id?: string; role: "admin" | "system" },
-  notes?: string
+  notes?: string,
 ) {
   const [order] = await db
     .select()
@@ -255,13 +242,10 @@ export async function updateOrderStatus(
 
   const currentStatus = order.status as OrderStatus;
   if (!canTransition(currentStatus, newStatus)) {
-    throw new Error(
-      `Cannot transition order status from "${currentStatus}" to "${newStatus}".`
-    );
+    throw new Error(`Cannot transition order status from "${currentStatus}" to "${newStatus}".`);
   }
 
   await db.transaction(async (tx) => {
-    // If transitioning to cancelled, restore product stock
     if (newStatus === "cancelled") {
       const items = await tx
         .select()
@@ -284,13 +268,11 @@ export async function updateOrderStatus(
       }
     }
 
-    // Update order status
     await tx
       .update(schema.orders)
       .set({ status: newStatus, updatedAt: new Date() })
       .where(eq(schema.orders.id, orderId));
 
-    // Record audit trail
     await tx.insert(schema.orderStatusHistory).values({
       id: crypto.randomUUID(),
       orderId,

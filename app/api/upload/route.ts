@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { storage } from "@/lib/storage";
+import { type NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { storage } from "@/lib/storage";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -23,9 +23,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: savedUrl });
   } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message || "Upload failed" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: err?.message || "Upload failed" }, { status: 400 });
   }
 }

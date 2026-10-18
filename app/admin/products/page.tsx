@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { getProducts } from "@/lib/repos/products";
 import { ProductsManager } from "@/components/admin/ProductsManager";
 import { Button } from "@/components/ui/Button";
-
+import { getProducts } from "@/lib/repos/products";
 
 export default async function AdminProductsPage() {
   const products = await getProducts({ activeOnly: false });

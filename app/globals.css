@@ -1,62 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  /* Apple HIG Neutrals & Canvas */
   --canvas: #f5f5f7;
   --surface: #ffffff;
   --surface-raised: #ffffff;
   --surface-subtle: #fbfbfd;
-  
-  /* Ink Typography Ramp */
+
   --ink: #1d1d1f;
   --ink-secondary: #6e6e73;
   --ink-tertiary: #86868b;
   --ink-subtle: #a1a1a6;
-  
-  /* Accent & Status Colors */
-  --accent: #1d3529; /* Deep Sahara forest green */
+
+  --accent: #1d3529;
   --accent-hover: #14251c;
   --accent-subtle: #e9f2ec;
   --apple-blue: #0071e3;
   --apple-blue-hover: #0077ed;
-  
+
   --success: #34c759;
   --success-bg: #eaf8ee;
   --warning: #ff9500;
   --error: #ff3b30;
   --error-bg: #feeceb;
 
-  /* Borders & Hairlines */
   --hairline: rgba(0, 0, 0, 0.08);
   --hairline-strong: rgba(0, 0, 0, 0.14);
 
-  /* Shadows */
   --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-float: 0 12px 32px rgba(0, 0, 0, 0.08);
   --shadow-sheet: 0 -8px 30px rgba(0, 0, 0, 0.12);
 
-  /* Radii */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-pill: 9999px;
-  
-  /* Focus Ring */
+
   --focus-ring: 0 0 0 4px rgba(0, 113, 227, 0.28);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 body {
   background-color: var(--canvas);
   color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
-    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Frosted glass navigation & surfaces */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+button {
+  cursor: pointer;
+}
+
+.scroll-pane {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.scroll-pane::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scroll-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-pane::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 9999px;
+}
+
+.scroll-pane::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.product-row {
+  contain: layout style;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 120px;
+}
+
 .frosted-nav {
   background-color: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(20px);
@@ -70,12 +112,10 @@ body {
   -webkit-backdrop-filter: blur(24px);
 }
 
-/* Hairline borders */
 .border-hairline {
   border-color: var(--hairline);
 }
 
-/* Subtle Apple button */
 .btn-apple-primary {
   background-color: var(--accent);
   color: #ffffff;
@@ -83,7 +123,9 @@ body {
   padding: 0.625rem 1.25rem;
   font-weight: 500;
   font-size: 0.9375rem;
-  transition: all 0.15s ease-out;
+  transition:
+    background-color 0.15s ease-out,
+    transform 0.15s ease-out;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -102,7 +144,9 @@ body {
   padding: 0.625rem 1.25rem;
   font-weight: 500;
   font-size: 0.9375rem;
-  transition: all 0.15s ease-out;
+  transition:
+    background-color 0.15s ease-out,
+    transform 0.15s ease-out;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -113,7 +157,6 @@ body {
   background-color: rgba(0, 0, 0, 0.08);
 }
 
-/* Shimmer animation for skeletons */
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -135,7 +178,6 @@ body {
   border-radius: var(--radius-sm);
 }
 
-/* Motion accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

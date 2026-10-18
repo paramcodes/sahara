@@ -1,5 +1,5 @@
+import crypto from "node:crypto";
 import { cookies } from "next/headers";
-import crypto from "crypto";
 
 const CART_COOKIE_NAME = "sahara_cart_id";
 
@@ -16,7 +16,7 @@ export async function getCartSessionId(): Promise<string> {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: 60 * 60 * 24 * 30,
     path: "/",
   });
 

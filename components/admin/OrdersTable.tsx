@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
+import { useState } from "react";
+import { updateOrderStatusAction } from "@/lib/actions/orders";
+import { formatCents } from "@/lib/pricing";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { useToast } from "../ui/Toast";
-import { updateOrderStatusAction } from "@/lib/actions/orders";
-import { formatCents } from "@/lib/pricing";
 
 export interface OrderRowData {
   id: string;
@@ -26,7 +26,7 @@ export function OrdersTable({ initialOrders }: { initialOrders: OrderRowData[] }
 
   const handleStatusChange = async (
     orderId: string,
-    newStatus: "confirmed" | "fulfilled" | "cancelled"
+    newStatus: "confirmed" | "fulfilled" | "cancelled",
   ) => {
     setLoadingId(orderId);
     const res = await updateOrderStatusAction(orderId, newStatus);
@@ -34,9 +34,7 @@ export function OrdersTable({ initialOrders }: { initialOrders: OrderRowData[] }
 
     if (res.success) {
       toast(`Order marked as ${newStatus}`, "success");
-      setOrders((prev) =>
-        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-      );
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));
     } else {
       toast(res.error || "Update failed", "error");
     }
@@ -78,9 +76,7 @@ export function OrdersTable({ initialOrders }: { initialOrders: OrderRowData[] }
                     #{order.orderNumber}
                   </Link>
                 </td>
-                <td className="py-3.5 px-4 font-medium text-[var(--ink)]">
-                  {order.customerName}
-                </td>
+                <td className="py-3.5 px-4 font-medium text-[var(--ink)]">{order.customerName}</td>
                 <td className="py-3.5 px-4 text-xs text-[var(--ink-secondary)]">
                   <div>{order.customerPhone}</div>
                   <div className="text-gray-400">{order.customerEmail}</div>
@@ -89,18 +85,10 @@ export function OrdersTable({ initialOrders }: { initialOrders: OrderRowData[] }
                   {formatCents(order.finalCents)}
                 </td>
                 <td className="py-3.5 px-4">
-                  {order.status === "placed" && (
-                    <Badge variant="warning">Placed</Badge>
-                  )}
-                  {order.status === "confirmed" && (
-                    <Badge variant="accent">Confirmed</Badge>
-                  )}
-                  {order.status === "fulfilled" && (
-                    <Badge variant="success">Fulfilled</Badge>
-                  )}
-                  {order.status === "cancelled" && (
-                    <Badge variant="error">Cancelled</Badge>
-                  )}
+                  {order.status === "placed" && <Badge variant="warning">Placed</Badge>}
+                  {order.status === "confirmed" && <Badge variant="accent">Confirmed</Badge>}
+                  {order.status === "fulfilled" && <Badge variant="success">Fulfilled</Badge>}
+                  {order.status === "cancelled" && <Badge variant="error">Cancelled</Badge>}
                 </td>
                 <td className="py-3.5 px-4 text-right">
                   <div className="inline-flex gap-1.5">

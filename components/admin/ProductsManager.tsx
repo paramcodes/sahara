@@ -1,16 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
-import { Switch } from "../ui/Switch";
-import { Button } from "../ui/Button";
-import { Badge } from "../ui/Badge";
-import { useToast } from "../ui/Toast";
-import {
-  toggleProductActiveAction,
-  deleteProductAction,
-} from "@/lib/actions/admin-products";
+import { useState } from "react";
+import { deleteProductAction, toggleProductActiveAction } from "@/lib/actions/admin-products";
 import { formatCents } from "@/lib/pricing";
+import { Badge } from "../ui/Badge";
+import { Button } from "../ui/Button";
+import { Switch } from "../ui/Switch";
+import { useToast } from "../ui/Toast";
 
 export interface AdminProductItem {
   id: string;
@@ -22,20 +19,13 @@ export interface AdminProductItem {
   bannerPath: string | null;
 }
 
-export function ProductsManager({
-  initialProducts,
-}: {
-  initialProducts: AdminProductItem[];
-}) {
-  const [products, setProducts] =
-    useState<AdminProductItem[]>(initialProducts);
+export function ProductsManager({ initialProducts }: { initialProducts: AdminProductItem[] }) {
+  const [products, setProducts] = useState<AdminProductItem[]>(initialProducts);
   const { toast } = useToast();
 
   const handleToggleActive = async (id: string, current: boolean) => {
     const next = !current;
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, active: next } : p))
-    );
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, active: next } : p)));
 
     const res = await toggleProductActiveAction(id, next);
     if (res.success) {
@@ -92,11 +82,7 @@ export function ProductsManager({
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-xl bg-black/[0.03] overflow-hidden shrink-0 border border-black/[0.04]">
                     {p.bannerPath ? (
-                      <img
-                        src={p.bannerPath}
-                        alt={p.name}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={p.bannerPath} alt={p.name} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
                         Item
@@ -104,9 +90,7 @@ export function ProductsManager({
                     )}
                   </div>
                   <div>
-                    <span className="font-semibold block text-[var(--ink)]">
-                      {p.name}
-                    </span>
+                    <span className="font-semibold block text-[var(--ink)]">{p.name}</span>
                     <span className="text-[11px] text-[var(--ink-tertiary)]">
                       /product/{p.slug}
                     </span>
@@ -120,18 +104,13 @@ export function ProductsManager({
                 {p.stockQty === null ? (
                   <Badge variant="neutral">Made to order</Badge>
                 ) : p.stockQty > 0 ? (
-                  <span className="text-emerald-700 font-medium">
-                    {p.stockQty} in stock
-                  </span>
+                  <span className="text-emerald-700 font-medium">{p.stockQty} in stock</span>
                 ) : (
                   <Badge variant="error">Out of stock</Badge>
                 )}
               </td>
               <td className="py-3.5 px-4">
-                <Switch
-                  checked={p.active}
-                  onChange={() => handleToggleActive(p.id, p.active)}
-                />
+                <Switch checked={p.active} onChange={() => handleToggleActive(p.id, p.active)} />
               </td>
               <td className="py-3.5 px-4 text-right">
                 <div className="inline-flex gap-2">
@@ -140,11 +119,7 @@ export function ProductsManager({
                       View ↗
                     </Button>
                   </Link>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleDelete(p.id, p.name)}
-                  >
+                  <Button variant="danger" size="sm" onClick={() => handleDelete(p.id, p.name)}>
                     Delete
                   </Button>
                 </div>

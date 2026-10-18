@@ -1,6 +1,6 @@
+import crypto from "node:crypto";
+import { and, eq } from "drizzle-orm";
 import { db, schema } from "../db";
-import { eq, and } from "drizzle-orm";
-import crypto from "crypto";
 
 export async function getOrCreateCart(orgId: string, userId?: string, sessionId?: string) {
   let cart = null;
@@ -46,10 +46,7 @@ export async function getCartWithItems(cartId: string) {
       product: schema.products,
     })
     .from(schema.cartItems)
-    .innerJoin(
-      schema.products,
-      eq(schema.cartItems.productId, schema.products.id)
-    )
+    .innerJoin(schema.products, eq(schema.cartItems.productId, schema.products.id))
     .where(eq(schema.cartItems.cartId, cartId));
 
   return items;
@@ -59,12 +56,7 @@ export async function addToCart(cartId: string, productId: string, qty: number =
   const [existing] = await db
     .select()
     .from(schema.cartItems)
-    .where(
-      and(
-        eq(schema.cartItems.cartId, cartId),
-        eq(schema.cartItems.productId, productId)
-      )
-    )
+    .where(and(eq(schema.cartItems.cartId, cartId), eq(schema.cartItems.productId, productId)))
     .limit(1);
 
   if (existing) {
@@ -82,44 +74,26 @@ export async function addToCart(cartId: string, productId: string, qty: number =
     });
   }
 
-  await db
-    .update(schema.carts)
-    .set({ updatedAt: new Date() })
-    .where(eq(schema.carts.id, cartId));
+  await db.update(schema.carts).set({ updatedAt: new Date() }).where(eq(schema.carts.id, cartId));
 }
 
 export async function updateCartItemQty(cartId: string, itemId: string, qty: number) {
   if (qty <= 0) {
     await db
       .delete(schema.cartItems)
-      .where(
-        and(
-          eq(schema.cartItems.id, itemId),
-          eq(schema.cartItems.cartId, cartId)
-        )
-      );
+      .where(and(eq(schema.cartItems.id, itemId), eq(schema.cartItems.cartId, cartId)));
   } else {
     await db
       .update(schema.cartItems)
       .set({ qty })
-      .where(
-        and(
-          eq(schema.cartItems.id, itemId),
-          eq(schema.cartItems.cartId, cartId)
-        )
-      );
+      .where(and(eq(schema.cartItems.id, itemId), eq(schema.cartItems.cartId, cartId)));
   }
 }
 
 export async function removeCartItem(cartId: string, itemId: string) {
   await db
     .delete(schema.cartItems)
-    .where(
-      and(
-        eq(schema.cartItems.id, itemId),
-        eq(schema.cartItems.cartId, cartId)
-      )
-    );
+    .where(and(eq(schema.cartItems.id, itemId), eq(schema.cartItems.cartId, cartId)));
 }
 
 export async function clearCart(cartId: string) {

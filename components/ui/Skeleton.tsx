@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 export interface SkeletonProps {
   className?: string;
@@ -6,11 +6,7 @@ export interface SkeletonProps {
   height?: string | number;
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({
-  className = "",
-  width,
-  height,
-}) => {
+export const Skeleton: React.FC<SkeletonProps> = ({ className = "", width, height }) => {
   return (
     <div
       className={`skeleton-shimmer ${className}`}

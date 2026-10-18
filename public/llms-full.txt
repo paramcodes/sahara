@@ -1,0 +1,8 @@
+# Sahara Atelier — Full context
+
+Sahara is a single-brand e-commerce storefront. Products are listed on the home page; shoppers can search, view product details, add to cart, and request orders (cash on delivery). Merchants manage products, discounts, and orders via /admin.
+
+## Key facts
+- Money is stored as integer cents.
+- Order statuses: placed → confirmed → fulfilled | cancelled.
+- Authentication via Better Auth.

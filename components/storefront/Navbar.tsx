@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
 
 export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [_isSearchOpen, _setIsSearchOpen] = useState(false);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +22,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
   return (
     <header className="sticky top-0 z-40 frosted-nav transition-all">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        {/* Brand Wordmark */}
+        {}
         <Link
           href="/"
           className="text-lg font-semibold tracking-tight text-[var(--ink)] flex items-center gap-2 hover:opacity-80 transition-opacity"
@@ -30,7 +31,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           <span>SAHARA</span>
         </Link>
 
-        {/* Search Bar */}
+        {}
         <form
           onSubmit={handleSearchSubmit}
           className="hidden md:flex items-center relative max-w-xs w-full mx-8"
@@ -56,7 +57,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           </svg>
         </form>
 
-        {/* Navigation Actions */}
+        {}
         <nav
           aria-label="Main Navigation"
           className="flex items-center gap-4 text-xs font-medium text-[var(--ink-secondary)]"
@@ -75,7 +76,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
             Merchant Admin
           </Link>
 
-          {/* Cart Bag */}
+          {}
           <Link
             href="/cart"
             aria-label={`Shopping Bag (${cartCount} items)`}
@@ -95,9 +96,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
               />
             </svg>
-            <span className="text-xs font-semibold tabular-nums">
-              {cartCount}
-            </span>
+            <span className="text-xs font-semibold tabular-nums">{cartCount}</span>
           </Link>
         </nav>
       </div>
