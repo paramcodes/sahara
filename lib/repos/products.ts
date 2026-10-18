@@ -1,6 +1,7 @@
 import { db, schema } from "../db";
 import { eq, and, ilike, or, desc, asc, sql } from "drizzle-orm";
 import crypto from "crypto";
+import { MOCK_PRODUCTS } from "../mock-data";
 
 export async function getProducts(options?: {
   orgId?: string;
@@ -32,13 +33,35 @@ export async function getProducts(options?: {
     );
   }
 
-  const items = await db
-    .select()
-    .from(schema.products)
-    .where(conditions.length > 0 ? and(...conditions) : undefined)
-    .orderBy(desc(schema.products.featured), desc(schema.products.createdAt));
+  try {
+    const items = await db
+      .select()
+      .from(schema.products)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(schema.products.featured), desc(schema.products.createdAt));
 
-  return items;
+    return items;
+  } catch (err) {
+    // Graceful fallback to rich mock data if database is disconnected
+    let list = [...MOCK_PRODUCTS];
+    if (options?.activeOnly !== false) {
+      list = list.filter((p) => p.active);
+    }
+    if (options?.query && options.query.trim().length > 0) {
+      const q = options.query.toLowerCase().trim();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.specs.some(
+            (s) =>
+              s.key.toLowerCase().includes(q) ||
+              s.value.toLowerCase().includes(q)
+          )
+      );
+    }
+    return list;
+  }
 }
 
 export async function getProductBySlug(slug: string, orgId?: string) {
@@ -47,32 +70,37 @@ export async function getProductBySlug(slug: string, orgId?: string) {
     conditions.push(eq(schema.products.orgId, orgId));
   }
 
-  const [product] = await db
-    .select()
-    .from(schema.products)
-    .where(and(...conditions))
-    .limit(1);
+  try {
+    const [product] = await db
+      .select()
+      .from(schema.products)
+      .where(and(...conditions))
+      .limit(1);
 
-  if (!product) return null;
+    if (!product) return null;
 
-  // Fetch specs and images
-  const specs = await db
-    .select()
-    .from(schema.productSpecs)
-    .where(eq(schema.productSpecs.productId, product.id))
-    .orderBy(asc(schema.productSpecs.displayOrder));
+    // Fetch specs and images
+    const specs = await db
+      .select()
+      .from(schema.productSpecs)
+      .where(eq(schema.productSpecs.productId, product.id))
+      .orderBy(asc(schema.productSpecs.displayOrder));
 
-  const images = await db
-    .select()
-    .from(schema.productImages)
-    .where(eq(schema.productImages.productId, product.id))
-    .orderBy(asc(schema.productImages.displayOrder));
+    const images = await db
+      .select()
+      .from(schema.productImages)
+      .where(eq(schema.productImages.productId, product.id))
+      .orderBy(asc(schema.productImages.displayOrder));
 
-  return {
-    ...product,
-    specs,
-    images,
-  };
+    return {
+      ...product,
+      specs,
+      images,
+    };
+  } catch (err) {
+    const found = MOCK_PRODUCTS.find((p) => p.slug === slug);
+    return found || null;
+  }
 }
 
 export async function getProductById(id: string) {

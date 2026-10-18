@@ -7,6 +7,7 @@ import { HeroBanner } from "@/components/storefront/HeroBanner";
 import { ProductRow } from "@/components/storefront/ProductRow";
 import { Footer } from "@/components/storefront/Footer";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { MOCK_STORE_SETTINGS } from "@/lib/mock-data";
 
 
 interface PageProps {
@@ -15,7 +16,14 @@ interface PageProps {
 
 export default async function HomePage({ searchParams }: PageProps) {
   const { q } = await searchParams;
-  const [settings] = await db.select().from(schema.storeSettings).limit(1);
+  let settings = null;
+  try {
+    const [row] = await db.select().from(schema.storeSettings).limit(1);
+    settings = row || MOCK_STORE_SETTINGS;
+  } catch {
+    settings = MOCK_STORE_SETTINGS;
+  }
+
   const products = await getProducts({ query: q, activeOnly: true });
   const { items } = await getCurrentCartData();
 

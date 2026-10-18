@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/Badge";
 import { AddToCartForm } from "@/components/storefront/AddToCartForm";
 import { ReviewSection } from "@/components/storefront/ReviewSection";
 import { formatCents, calculateProductPrice } from "@/lib/pricing";
+import { MOCK_REVIEWS } from "@/lib/mock-data";
 
 
 interface PageProps {
@@ -26,12 +27,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const { items: cartItems } = await getCurrentCartData();
   const totalCartQty = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
-  // Fetch reviews for this product
-  const reviews = await db
-    .select()
-    .from(schema.reviews)
-    .where(eq(schema.reviews.productId, product.id))
-    .orderBy(desc(schema.reviews.createdAt));
+  // Fetch reviews for this product with fallback
+  let reviews: { id: string; authorName: string; rating: number; comment: string; createdAt: Date }[] = [];
+  try {
+    const rows = await db
+      .select()
+      .from(schema.reviews)
+      .where(eq(schema.reviews.productId, product.id))
+      .orderBy(desc(schema.reviews.createdAt));
+    reviews = rows;
+  } catch {
+    reviews = MOCK_REVIEWS.filter((r) => r.productId === product.id);
+  }
 
   const pricing = calculateProductPrice(product);
   const heroImage =

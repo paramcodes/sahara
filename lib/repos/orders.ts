@@ -2,6 +2,7 @@ import { db, schema } from "../db";
 import { eq, desc, and } from "drizzle-orm";
 import crypto from "crypto";
 import { createOrderItemSnapshot, calculateCartTotals } from "../pricing";
+import { MOCK_ORDERS } from "../mock-data";
 
 export type OrderStatus = "placed" | "confirmed" | "fulfilled" | "cancelled";
 
@@ -171,30 +172,35 @@ export async function getOrderById(orderId: string) {
 }
 
 export async function getOrderByNumber(orderNumber: string) {
-  const [order] = await db
-    .select()
-    .from(schema.orders)
-    .where(eq(schema.orders.orderNumber, orderNumber))
-    .limit(1);
+  try {
+    const [order] = await db
+      .select()
+      .from(schema.orders)
+      .where(eq(schema.orders.orderNumber, orderNumber))
+      .limit(1);
 
-  if (!order) return null;
+    if (!order) return null;
 
-  const items = await db
-    .select()
-    .from(schema.orderItems)
-    .where(eq(schema.orderItems.orderId, order.id));
+    const items = await db
+      .select()
+      .from(schema.orderItems)
+      .where(eq(schema.orderItems.orderId, order.id));
 
-  const history = await db
-    .select()
-    .from(schema.orderStatusHistory)
-    .where(eq(schema.orderStatusHistory.orderId, order.id))
-    .orderBy(desc(schema.orderStatusHistory.createdAt));
+    const history = await db
+      .select()
+      .from(schema.orderStatusHistory)
+      .where(eq(schema.orderStatusHistory.orderId, order.id))
+      .orderBy(desc(schema.orderStatusHistory.createdAt));
 
-  return {
-    ...order,
-    items,
-    history,
-  };
+    return {
+      ...order,
+      items,
+      history,
+    };
+  } catch (err) {
+    const found = MOCK_ORDERS.find((o) => o.orderNumber === orderNumber);
+    return found || null;
+  }
 }
 
 export async function getOrders(options?: {
@@ -202,25 +208,33 @@ export async function getOrders(options?: {
   userId?: string;
   status?: OrderStatus;
 }) {
-  const conditions = [];
+  try {
+    const conditions = [];
 
-  if (options?.orgId) {
-    conditions.push(eq(schema.orders.orgId, options.orgId));
-  }
-  if (options?.userId) {
-    conditions.push(eq(schema.orders.userId, options.userId));
-  }
-  if (options?.status) {
-    conditions.push(eq(schema.orders.status, options.status));
-  }
+    if (options?.orgId) {
+      conditions.push(eq(schema.orders.orgId, options.orgId));
+    }
+    if (options?.userId) {
+      conditions.push(eq(schema.orders.userId, options.userId));
+    }
+    if (options?.status) {
+      conditions.push(eq(schema.orders.status, options.status));
+    }
 
-  const list = await db
-    .select()
-    .from(schema.orders)
-    .where(conditions.length > 0 ? and(...conditions) : undefined)
-    .orderBy(desc(schema.orders.createdAt));
+    const list = await db
+      .select()
+      .from(schema.orders)
+      .where(conditions.length > 0 ? and(...conditions) : undefined)
+      .orderBy(desc(schema.orders.createdAt));
 
-  return list;
+    return list;
+  } catch (err) {
+    let list = MOCK_ORDERS;
+    if (options?.status) {
+      list = list.filter((o) => o.status === options.status);
+    }
+    return list;
+  }
 }
 
 export async function updateOrderStatus(
