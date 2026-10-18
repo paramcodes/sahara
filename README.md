@@ -38,6 +38,8 @@
 | <img src="public/docs/screenshots/05-order-tracking.png" width="420" alt="Order Tracking" /> | <img src="public/docs/screenshots/06-admin-inbox.png" width="420" alt="Admin Inbox" /> |
 | **7. Catalog Management** | **8. 5-Minute Add Product Form** |
 | <img src="public/docs/screenshots/07-admin-products.png" width="420" alt="Products Table" /> | <img src="public/docs/screenshots/08-admin-new-product.png" width="420" alt="Add Product" /> |
+| **9. In-App Documentation** | |
+| <img src="public/docs/screenshots/09-docs.png" width="420" alt="Docs" /> | |
 
 ---
 
