@@ -47,8 +47,8 @@ async function capture() {
   await page.fill("input[type='email']", "admin@sahara.store");
   await page.fill("input[type='password']", "SaharaAdmin2026!");
   await page.click("button:has-text('Sign In')");
-  await page.waitForURL("**/admin", { timeout: 10000 });
-  await page.waitForTimeout(1000);
+  await page.waitForURL("**/admin", { timeout: 30000 });
+  await page.waitForTimeout(2000);
 
   await page.screenshot({ path: path.join(outputDir, "06-admin-inbox.png") });
   console.log("✓ 06-admin-inbox.png");
