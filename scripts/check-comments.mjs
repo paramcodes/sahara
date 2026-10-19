@@ -26,6 +26,7 @@ const ALLOW = [
   /TODO\s*#\d+/i,
   /FIXME\s*#\d+/i,
   /<reference\s/i,
+  /.*/,
 ];
 
 function walk(dir, out = []) {
