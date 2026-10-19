@@ -62,7 +62,7 @@ for (const file of walk(ROOT)) {
     if (!m) continue;
     const text = m[1].trim();
     if (!text) continue;
-    if (ALLOW.some((r) => r.test("//" + text))) continue;
+    if (ALLOW.some((r) => r.test(`//${text}`))) continue;
     console.error(
       `${path.relative(ROOT, file)}:${i + 1}: disallowed line comment: ${text.slice(0, 60)}`,
     );

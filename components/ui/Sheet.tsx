@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 export interface SheetProps {
   isOpen: boolean;
@@ -9,12 +10,7 @@ export interface SheetProps {
   children: React.ReactNode;
 }
 
-export const Sheet: React.FC<SheetProps> = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-}) => {
+export const Sheet: React.FC<SheetProps> = ({ isOpen, onClose, title, children }) => {
   // Only the deferred unmount lives in state. `isAnimating` is derived straight
   // from `isOpen`, so opening a sheet costs one render instead of the previous
   // three (isVisible -> isAnimating -> mounted).
@@ -31,6 +27,7 @@ export const Sheet: React.FC<SheetProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Lock body scroll when open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -57,7 +54,7 @@ export const Sheet: React.FC<SheetProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      {}
+      {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
           isOpen ? "opacity-100" : "opacity-0"
@@ -66,15 +63,13 @@ export const Sheet: React.FC<SheetProps> = ({
         aria-hidden="true"
       />
 
-      {}
+      {/* Sheet Container */}
       <div
         role="dialog"
         aria-modal="true"
         aria-label={title || "Modal Dialog"}
         className={`relative z-10 w-full sm:max-w-lg max-h-[90vh] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-clip flex flex-col transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-          isOpen
-            ? "opacity-100 translate-y-0 scale-100"
-            : "opacity-0 translate-y-6 scale-95"
+          isOpen ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-6 scale-95"
         }`}
       >
         {/* iOS Grab Handle for mobile */}
@@ -82,7 +77,7 @@ export const Sheet: React.FC<SheetProps> = ({
           <div className="w-10 h-1 rounded-full bg-black/20" />
         </div>
 
-        {}
+        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.06]">
           <h2 className="text-lg font-semibold text-[var(--ink)] tracking-tight">{title}</h2>
           <button
@@ -95,7 +90,9 @@ export const Sheet: React.FC<SheetProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">{children}</div>
+        <div className="p-6 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]">
+          {children}
+        </div>
       </div>
     </div>
   );

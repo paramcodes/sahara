@@ -1,8 +1,6 @@
 import crypto from "node:crypto";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db, schema } from "../db";
-import { eq, and, sql } from "drizzle-orm";
-import crypto from "crypto";
 
 export async function findCart(orgId: string, userId?: string, sessionId?: string) {
   if (userId) {
@@ -17,9 +15,7 @@ export async function findCart(orgId: string, userId?: string, sessionId?: strin
     const [cart] = await db
       .select()
       .from(schema.carts)
-      .where(
-        and(eq(schema.carts.orgId, orgId), eq(schema.carts.sessionId, sessionId))
-      )
+      .where(and(eq(schema.carts.orgId, orgId), eq(schema.carts.sessionId, sessionId)))
       .limit(1);
     return cart ?? null;
   }

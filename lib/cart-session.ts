@@ -11,9 +11,7 @@ const CART_COOKIE_NAME = "sahara_cart_id";
  * still hand back a stable-per-render id so reads work, but nothing is written
  * and no cart row is created until a mutation actually happens.
  */
-export async function getCartSessionId(options?: {
-  persist?: boolean;
-}): Promise<string> {
+export async function getCartSessionId(options?: { persist?: boolean }): Promise<string> {
   const cookieStore = await cookies();
   const existing = cookieStore.get(CART_COOKIE_NAME)?.value;
 

@@ -51,9 +51,7 @@ export default function RegisterPage() {
             <span className="w-3 h-3 rounded-full bg-[var(--accent)]" />
             <span>SAHARA</span>
           </Link>
-          <h1 className="text-xl font-semibold text-[var(--ink)] mbs-3">
-            Create an Account
-          </h1>
+          <h1 className="text-xl font-semibold text-[var(--ink)] mbs-3">Create an Account</h1>
           <p className="text-xs text-[var(--ink-secondary)] mbs-1">
             Join Sahara for order tracking and quick checkouts.
           </p>

@@ -4,8 +4,8 @@ import crypto from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession } from "../auth";
+import { db, schema } from "../db";
 import { getOrg } from "../repos/org";
-import crypto from "crypto";
 
 const ReviewSchema = z.object({
   productId: z.string().min(1),

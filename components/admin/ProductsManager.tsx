@@ -1,15 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { Switch } from "../ui/Switch";
-import { Button } from "../ui/Button";
-import { Badge } from "../ui/Badge";
-import { useToast } from "../ui/Toast";
-import {
-  toggleProductActiveAction,
-  deleteProductAction,
-} from "@/lib/actions/admin-products";
+import Link from "next/link";
+import { useState } from "react";
+import { deleteProductAction, toggleProductActiveAction } from "@/lib/actions/admin-products";
 import { formatCents } from "@/lib/pricing";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";

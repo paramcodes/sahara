@@ -1,5 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import type React from "react";
+import { calculateProductPrice, formatCents } from "@/lib/pricing";
 import { Badge } from "../ui/Badge";
 
 export interface ProductRowProps {
@@ -28,7 +30,7 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
       className="group block rounded-2xl bg-white p-4 sm:p-5 transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] border border-black/[0.04] hover:border-black/[0.1] hover:shadow-sm"
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
-        {}
+        {/* Left: Image & Info */}
         <div className="flex items-center gap-4 sm:gap-5 w-full sm:w-auto">
           {/* Thumbnail */}
           <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-black/[0.03] overflow-clip shrink-0 flex items-center justify-center border border-black/[0.04]">
@@ -45,7 +47,7 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
             )}
           </div>
 
-          {}
+          {/* Details */}
           <div className="min-w-0">
             <div className="flex items-center gap-2 mbe-1">
               <h3 className="text-base sm:text-lg font-medium text-[var(--ink)] tracking-tight truncate group-hover:text-[var(--accent)] transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)]">
@@ -64,7 +66,7 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
               {product.description}
             </p>
 
-            {}
+            {/* Stock badge */}
             <div className="flex items-center gap-2 text-xs">
               {isOutOfStock ? (
                 <span className="text-[var(--error)] font-medium">Sold Out</span>

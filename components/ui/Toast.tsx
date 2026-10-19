@@ -26,7 +26,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const dismiss = useCallback((id: string) => {
     setToasts((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, exiting: true, mounted: false } : t))
+      prev.map((t) => (t.id === id ? { ...t, exiting: true, mounted: false } : t)),
     );
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -36,22 +36,17 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const toast = useCallback(
     (text: string, type: "success" | "error" | "info" = "success") => {
       const id = Math.random().toString(36).substring(2, 9);
-      setToasts((prev) => [
-        ...prev,
-        { id, type, text, mounted: false, exiting: false },
-      ]);
+      setToasts((prev) => [...prev, { id, type, text, mounted: false, exiting: false }]);
 
       requestAnimationFrame(() => {
-        setToasts((prev) =>
-          prev.map((t) => (t.id === id ? { ...t, mounted: true } : t))
-        );
+        setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, mounted: true } : t)));
       });
 
       setTimeout(() => {
         dismiss(id);
       }, 3500);
     },
-    [dismiss]
+    [dismiss],
   );
 
   return (
@@ -68,8 +63,8 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               t.exiting
                 ? "opacity-0 translate-y-2"
                 : t.mounted
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
             } ${
               t.type === "success"
                 ? "bg-white/95 border-emerald-100 text-[var(--ink)]"

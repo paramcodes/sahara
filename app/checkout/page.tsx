@@ -27,12 +27,12 @@ export default async function CheckoutPage() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
-          {}
+          {/* Left: Form */}
           <div className="md:col-span-3">
             <CheckoutForm />
           </div>
 
-          {}
+          {/* Right: Items preview */}
           <div className="md:col-span-2 p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-4">
             <h3 className="text-sm font-semibold text-[var(--ink)]">
               In Your Bag ({totals.itemCount})

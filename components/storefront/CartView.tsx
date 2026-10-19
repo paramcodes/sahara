@@ -1,8 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { Stepper } from "../ui/Stepper";
+import Link from "next/link";
+import { useState } from "react";
+import { removeCartItemAction, updateCartItemQtyAction } from "@/lib/actions/cart";
+import { calculateCartTotals, calculateProductPrice, formatCents } from "@/lib/pricing";
 import { Button } from "../ui/Button";
 import { EmptyState } from "../ui/EmptyState";
 import { Stepper } from "../ui/Stepper";
@@ -73,7 +75,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
-      {}
+      {/* Cart Items List */}
       <div className="lg:col-span-2 flex flex-col gap-4">
         {items.map((item) => {
           const pricing = calculateProductPrice(item.product);
@@ -81,9 +83,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
             <div
               key={item.id}
               className={`flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-black/[0.04] transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-                removingIds.has(item.id)
-                  ? "opacity-0 translate-x-2"
-                  : "opacity-100 translate-x-0"
+                removingIds.has(item.id) ? "opacity-0 translate-x-2" : "opacity-100 translate-x-0"
               }`}
             >
               <div className="flex items-center gap-4">
@@ -130,7 +130,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
                 </div>
               </div>
 
-              {}
+              {/* Quantity Stepper & Remove */}
               <div className="flex items-center gap-3">
                 <Stepper
                   value={item.qty}
@@ -155,9 +155,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
 
       {/* Summary Box */}
       <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-5 sticky inset-bs-20">
-        <h2 className="text-base font-semibold text-[var(--ink)] tracking-tight">
-          Order Summary
-        </h2>
+        <h2 className="text-base font-semibold text-[var(--ink)] tracking-tight">Order Summary</h2>
 
         <div className="flex flex-col gap-2.5 text-xs sm:text-sm text-[var(--ink-secondary)]">
           <div className="flex justify-between">

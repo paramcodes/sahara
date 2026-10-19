@@ -45,9 +45,7 @@ export function CheckoutForm() {
       className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-6"
     >
       <div>
-        <h2 className="text-lg font-semibold text-[var(--ink)] tracking-tight">
-          Delivery Details
-        </h2>
+        <h2 className="text-lg font-semibold text-[var(--ink)] tracking-tight">Delivery Details</h2>
         <p className="text-xs text-[var(--ink-secondary)] mbs-0.5">
           We will contact you via WhatsApp or phone to confirm dispatch.
         </p>

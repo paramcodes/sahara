@@ -50,15 +50,13 @@ export default function LoginPage() {
             <span className="w-3 h-3 rounded-full bg-[var(--accent)]" />
             <span>SAHARA</span>
           </Link>
-          <h1 className="text-xl font-semibold text-[var(--ink)] mbs-3">
-            Sign In
-          </h1>
+          <h1 className="text-xl font-semibold text-[var(--ink)] mbs-3">Sign In</h1>
           <p className="text-xs text-[var(--ink-secondary)] mbs-1">
             Access your merchant portal or buyer account.
           </p>
         </div>
 
-        {}
+        {/* Card */}
         <form
           onSubmit={handleSubmit}
           className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-4"
@@ -112,10 +110,7 @@ export default function LoginPage() {
         </form>
 
         <div className="text-center mbs-6">
-          <Link
-            href="/"
-            className="text-xs text-[var(--ink-tertiary)] hover:text-[var(--ink)]"
-          >
+          <Link href="/" className="text-xs text-[var(--ink-tertiary)] hover:text-[var(--ink)]">
             ← Return to storefront
           </Link>
         </div>

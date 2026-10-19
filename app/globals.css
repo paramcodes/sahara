@@ -51,6 +51,7 @@
   --shadow-float: 0 12px 32px oklch(0% 0 none / 0.08);
   --shadow-sheet: 0 -8px 30px oklch(0% 0 none / 0.12);
 
+  /* Radii */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
@@ -79,19 +80,35 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4 { text-wrap: balance; }
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
 
-img, svg, video {
+img,
+svg,
+video {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
-input, textarea, select { font-size: max(16px, 1rem); }
+input,
+textarea,
+select {
+  font-size: max(16px, 1rem);
+}
 
-button, a, [role="button"] { touch-action: manipulation; }
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+}
 
-button, [role="button"] {
+button,
+[role="button"] {
   user-select: none;
   -webkit-user-select: none;
 }
@@ -101,6 +118,7 @@ button, [role="button"] {
   outline-offset: 0.25em;
 }
 
+/* Frosted glass navigation & surfaces */
 .frosted-nav {
   background-color: color-mix(in oklch, oklch(100% 0 none) 82%, transparent);
   backdrop-filter: blur(20px);
@@ -115,10 +133,12 @@ button, [role="button"] {
   -webkit-backdrop-filter: blur(24px);
 }
 
+/* Hairline borders */
 .border-hairline {
   border-color: var(--hairline);
 }
 
+/* Subtle Apple button */
 .btn-apple-primary {
   background-color: var(--accent);
   color: oklch(100% 0 none);
@@ -176,9 +196,14 @@ button, [role="button"] {
   }
 }
 
+/* Shimmer animation for skeletons */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton-shimmer {
@@ -207,8 +232,12 @@ button, [role="button"] {
     minmax(var(--gutter), 1fr) [full-width-end];
 }
 
-:is(.content-grid, .full-width) > * { grid-column: content; }
-:is(.content-grid, .full-width) > .breakout { grid-column: breakout; }
+:is(.content-grid, .full-width) > * {
+  grid-column: content;
+}
+:is(.content-grid, .full-width) > .breakout {
+  grid-column: breakout;
+}
 :is(.content-grid, .full-width) > .full-width {
   grid-column: full-width;
   display: grid;
@@ -216,7 +245,9 @@ button, [role="button"] {
 }
 
 /* Whole card clickable from one link */
-.card { position: relative; }
+.card {
+  position: relative;
+}
 
 .card-link::after {
   content: "";
@@ -224,7 +255,9 @@ button, [role="button"] {
   inset: 0;
 }
 
-.card-link:focus-visible { outline: 2px solid transparent; }
+.card-link:focus-visible {
+  outline: 2px solid transparent;
+}
 
 .card:has(.card-link:focus-visible) {
   outline: 2px solid currentColor;
@@ -237,8 +270,12 @@ button, [role="button"] {
 }
 
 /* Form feedback */
-input:user-invalid { border-color: var(--error); }
-input:user-valid { border-color: var(--success); }
+input:user-invalid {
+  border-color: var(--error);
+}
+input:user-valid {
+  border-color: var(--success);
+}
 
 /* Textarea grows with content */
 textarea {
@@ -249,40 +286,64 @@ textarea {
 }
 
 /* Cross-document view transitions */
-@view-transition { navigation: auto; }
+@view-transition {
+  navigation: auto;
+}
 
 /* Anchor targets clear sticky header */
-html { scroll-padding-block-start: 5rem; }
+html {
+  scroll-padding-block-start: 5rem;
+}
 
 @media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* No rubber-band bounce on desktop */
-html { overscroll-behavior-y: none; }
+html {
+  overscroll-behavior-y: none;
+}
 
 @media (any-pointer: coarse) {
-  html { overscroll-behavior-y: auto; }
+  html {
+    overscroll-behavior-y: auto;
+  }
 }
 
 /* Hover motion only on devices that support hover */
 @media (hover: hover) and (pointer: fine) {
-  .hover-scale-105:hover { transform: scale(1.05); }
-  .group:hover .group-scale-105 { transform: scale(1.05); }
-  .hover-scale-110:hover { transform: scale(1.1); }
+  .hover-scale-105:hover {
+    transform: scale(1.05);
+  }
+  .group:hover .group-scale-105 {
+    transform: scale(1.05);
+  }
+  .hover-scale-110:hover {
+    transform: scale(1.1);
+  }
 }
 
 /* One-shot delight pop-in */
 @keyframes pop-in {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 .animate-pop-in {
   animation: pop-in 300ms var(--ease-out) both;
 }
 
 /* Whole card clickable from one link */
-.card { position: relative; }
+.card {
+  position: relative;
+}
 
 .card-link::after {
   content: "";
@@ -290,7 +351,9 @@ html { overscroll-behavior-y: none; }
   inset: 0;
 }
 
-.card-link:focus-visible { outline: 2px solid transparent; }
+.card-link:focus-visible {
+  outline: 2px solid transparent;
+}
 
 .card:has(.card-link:focus-visible) {
   outline: 2px solid currentColor;
@@ -303,8 +366,12 @@ html { overscroll-behavior-y: none; }
 }
 
 /* Form feedback */
-input:user-invalid { border-color: var(--error); }
-input:user-valid { border-color: var(--success); }
+input:user-invalid {
+  border-color: var(--error);
+}
+input:user-valid {
+  border-color: var(--success);
+}
 
 /* Textarea grows with content */
 textarea {
@@ -315,33 +382,55 @@ textarea {
 }
 
 /* Cross-document view transitions */
-@view-transition { navigation: auto; }
+@view-transition {
+  navigation: auto;
+}
 
 /* Anchor targets clear sticky header */
-html { scroll-padding-block-start: 5rem; }
+html {
+  scroll-padding-block-start: 5rem;
+}
 
 @media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* No rubber-band bounce on desktop */
-html { overscroll-behavior-y: none; }
+html {
+  overscroll-behavior-y: none;
+}
 
 @media (any-pointer: coarse) {
-  html { overscroll-behavior-y: auto; }
+  html {
+    overscroll-behavior-y: auto;
+  }
 }
 
 /* Hover motion only on devices that support hover */
 @media (hover: hover) and (pointer: fine) {
-  .hover-scale-105:hover { transform: scale(1.05); }
-  .group:hover .group-scale-105 { transform: scale(1.05); }
-  .hover-scale-110:hover { transform: scale(1.1); }
+  .hover-scale-105:hover {
+    transform: scale(1.05);
+  }
+  .group:hover .group-scale-105 {
+    transform: scale(1.05);
+  }
+  .hover-scale-110:hover {
+    transform: scale(1.1);
+  }
 }
 
 /* One-shot delight pop-in */
 @keyframes pop-in {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 .animate-pop-in {
   animation: pop-in 300ms var(--ease-out) both;

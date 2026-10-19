@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/storefront/Navbar";
 import { Footer } from "@/components/storefront/Footer";
 import { Navbar } from "@/components/storefront/Navbar";
 
@@ -55,26 +54,23 @@ export default function DocsPage() {
             Sahara Developer & Contributor Guide
           </h1>
           <p className="text-sm text-[var(--ink-secondary)] mbs-2 max-w-2xl leading-relaxed">
-            Everything you or any new contributor needs to understand the stack, UI component layer, database design, and merchant workflows.
+            Everything you or any new contributor needs to understand the stack, UI component layer,
+            database design, and merchant workflows.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {sections.map((sec) => (
+          {sections.map((sec, i) => (
             <div
-              key={sec.file}
+              key={i}
               className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col justify-between"
             >
               <div>
                 <span className="text-[11px] font-mono text-[var(--ink-tertiary)] block mbe-1">
                   {sec.file}
                 </span>
-                <h3 className="text-lg font-semibold text-[var(--ink)] mbe-2">
-                  {sec.title}
-                </h3>
-                <p className="text-xs text-[var(--ink-secondary)] leading-relaxed">
-                  {sec.summary}
-                </p>
+                <h3 className="text-lg font-semibold text-[var(--ink)] mbe-2">{sec.title}</h3>
+                <p className="text-xs text-[var(--ink-secondary)] leading-relaxed">{sec.summary}</p>
               </div>
 
               <div className="mbs-6 pbs-4 border-t border-black/[0.04] text-xs font-medium text-[var(--apple-blue)]">

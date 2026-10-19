@@ -1,5 +1,5 @@
-import React from "react";
 import Image from "next/image";
+import type React from "react";
 import { Button } from "../ui/Button";
 
 export interface HeroBannerProps {
@@ -28,7 +28,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/10" />
 
-      {}
+      {/* Content Container */}
       <div className="relative z-10 max-w-3xl mx-auto px-6 text-center text-white flex flex-col items-center">
         <span className="text-xs uppercase tracking-[0.25em] font-medium text-white/80 mbe-3">
           {tagline}

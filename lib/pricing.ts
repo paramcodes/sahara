@@ -1,7 +1,13 @@
+/**
+ * Single pricing engine for Sahara.
+ * Shared by cart calculation, checkout, and admin preview.
+ * All monetary amounts are integer cents.
+ */
+
 export interface DiscountableProduct {
   id: string;
   priceCents: number;
-  discountType: string | null;
+  discountType: string | null; // 'none' | 'percent' | 'fixed'
   discountValue: number | null;
   discountStartsAt?: Date | string | null;
   discountEndsAt?: Date | string | null;
@@ -36,6 +42,9 @@ export interface OrderItemSnapshot {
   qty: number;
 }
 
+/**
+ * Evaluates whether a product's discount is currently active based on dates.
+ */
 export function isDiscountActive(
   discountType: string | null | undefined,
   discountValue: number | null | undefined,
@@ -60,6 +69,9 @@ export function isDiscountActive(
   return true;
 }
 
+/**
+ * Computes per-unit discount and final price in integer cents.
+ */
 export function calculateProductPrice(
   product: DiscountableProduct,
   now: Date = new Date(),
@@ -86,9 +98,11 @@ export function calculateProductPrice(
   const val = Number(product.discountValue) || 0;
 
   if (product.discountType === "percent") {
+    // Percent discount (e.g. 15% -> val = 15)
     const clampedPercent = Math.min(100, Math.max(0, val));
     discountCents = Math.round((basePrice * clampedPercent) / 100);
   } else if (product.discountType === "fixed") {
+    // Fixed cents discount
     discountCents = Math.min(basePrice, Math.max(0, Math.round(val)));
   }
 
@@ -102,6 +116,9 @@ export function calculateProductPrice(
   };
 }
 
+/**
+ * Calculates cart totals across an array of line items.
+ */
 export function calculateCartTotals(items: CartLineItem[], now: Date = new Date()): CartTotals {
   let itemCount = 0;
   let subtotalCents = 0;
@@ -128,6 +145,9 @@ export function calculateCartTotals(items: CartLineItem[], now: Date = new Date(
   };
 }
 
+/**
+ * Creates immutable snapshot data for an order item row.
+ */
 export function createOrderItemSnapshot(
   product: DiscountableProduct & { name: string },
   qty: number,
@@ -147,6 +167,9 @@ export function createOrderItemSnapshot(
   };
 }
 
+/**
+ * Format integer cents to currency string (e.g. 2400 -> "$24.00")
+ */
 export function formatCents(cents: number, currency: string = "USD"): string {
   const safeCents = Number.isFinite(cents) ? cents : 0;
   return new Intl.NumberFormat("en-US", {

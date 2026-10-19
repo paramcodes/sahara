@@ -1,12 +1,12 @@
+import fs from "node:fs";
+import path from "node:path";
 import { cache } from "react";
-import fs from "fs";
-import path from "path";
 import { db, schema } from "../db";
 import { MOCK_STORE_SETTINGS } from "../mock-data";
 
 /** Public path of a local upload that actually exists on disk, else null. */
 function resolveLocalUpload(publicPath: string | null): string | null {
-  if (!publicPath || !publicPath.startsWith("/uploads/")) return null;
+  if (!publicPath?.startsWith("/uploads/")) return null;
   const target = path.join(process.cwd(), "public", publicPath);
   return fs.existsSync(target) ? publicPath : null;
 }
@@ -19,10 +19,7 @@ function resolveLocalUpload(publicPath: string | null): string | null {
  * single query without adding cross-request staleness.
  */
 export const getOrg = cache(async () => {
-  const [row] = await db
-    .select()
-    .from(schema.orgs)
-    .limit(1);
+  const [row] = await db.select().from(schema.orgs).limit(1);
   return row ?? null;
 });
 
@@ -33,10 +30,7 @@ export const getOrg = cache(async () => {
  */
 export const getStoreSettings = cache(async () => {
   try {
-    const [row] = await db
-      .select()
-      .from(schema.storeSettings)
-      .limit(1);
+    const [row] = await db.select().from(schema.storeSettings).limit(1);
     if (!row) return MOCK_STORE_SETTINGS;
 
     // A deleted upload would make the hero (the LCP element) 404. Fall back to

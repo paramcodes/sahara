@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { eq } from "drizzle-orm";
 import { auth } from "../lib/auth";
 import { db, schema } from "../lib/db";
@@ -11,6 +11,7 @@ async function seed() {
   const adminEmail = process.env.SEED_ADMIN_EMAIL || "admin@sahara.store";
   const adminPassword = process.env.SEED_ADMIN_PASSWORD || "SaharaAdmin2026!";
 
+  // 1. Seed or find default org
   let [org] = await db.select().from(schema.orgs).where(eq(schema.orgs.slug, orgSlug)).limit(1);
 
   if (!org) {
@@ -29,6 +30,7 @@ async function seed() {
     console.log(`ℹ Organization already exists: ${org.name}`);
   }
 
+  // 2. Seed Store Settings
   const [settings] = await db
     .select()
     .from(schema.storeSettings)
@@ -51,6 +53,7 @@ async function seed() {
     console.log("✓ Initialized store settings & hero copy");
   }
 
+  // 3. Seed Admin User
   const [existingAdmin] = await db
     .select()
     .from(schema.users)
@@ -68,6 +71,7 @@ async function seed() {
       });
       console.log(`✓ Created admin user: ${adminEmail}`);
 
+      // Ensure role is explicitly admin
       if (res?.user?.id) {
         await db
           .update(schema.users)
@@ -78,6 +82,7 @@ async function seed() {
       console.warn("Notice during admin signup:", e instanceof Error ? e.message : e);
     }
   } else {
+    // Ensure role is admin
     await db
       .update(schema.users)
       .set({ role: "admin", orgId: org.id })
@@ -85,13 +90,14 @@ async function seed() {
     console.log(`ℹ Admin user already exists: ${adminEmail}`);
   }
 
+  // 4. Seed Sample Products
   const sampleProducts = [
     {
       name: "Obsidian Ceramic Tumbler",
       slug: "obsidian-ceramic-tumbler",
       description:
         "Hand-thrown stoneware finished with a matte black volcanic glaze. Double-walled for thermal retention while remaining cool to the hand.",
-      priceCents: 4200,
+      priceCents: 4200, // $42.00
       discountType: "none",
       discountValue: 0,
       stockQty: 24,
@@ -110,9 +116,9 @@ async function seed() {
       slug: "merino-wool-throw",
       description:
         "Woven from extra-fine 19.5-micron Australian merino wool. Soft, breathable, and finished with a minimalist purl edge stitch.",
-      priceCents: 16500,
+      priceCents: 16500, // $165.00
       discountType: "percent",
-      discountValue: 15,
+      discountValue: 15, // 15% discount -> $140.25
       stockQty: 10,
       featured: true,
       image:
@@ -129,9 +135,9 @@ async function seed() {
       slug: "cast-iron-teapot",
       description:
         "Traditional sand-cast Tetsubin teapot with an enamel interior and stainless steel infuser basket. Retains heat for extended tea ceremonies.",
-      priceCents: 8900,
+      priceCents: 8900, // $89.00
       discountType: "fixed",
-      discountValue: 1500,
+      discountValue: 1500, // $15.00 off -> $74.00
       stockQty: 8,
       featured: true,
       image:
@@ -147,10 +153,10 @@ async function seed() {
       slug: "brass-desk-tray",
       description:
         "Solid spun brass valet tray with an unlacquered living finish that develops a rich, personal patina over time.",
-      priceCents: 5800,
+      priceCents: 5800, // $58.00
       discountType: "none",
       discountValue: 0,
-      stockQty: null,
+      stockQty: null, // Unlimited / Made-to-order
       featured: false,
       image:
         "https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?q=80&w=1200&auto=format&fit=crop",
@@ -165,7 +171,7 @@ async function seed() {
       slug: "cedar-hinoki-candle",
       description:
         "Hand-poured coconut-soy wax infused with wild Japanese cypress, cedarwood needles, and smoked vetiver.",
-      priceCents: 3600,
+      priceCents: 3600, // $36.00
       discountType: "none",
       discountValue: 0,
       stockQty: 35,
@@ -204,6 +210,7 @@ async function seed() {
         active: true,
       });
 
+      // Insert specs
       for (let i = 0; i < p.specs.length; i++) {
         await db.insert(schema.productSpecs).values({
           id: crypto.randomUUID(),
@@ -214,6 +221,7 @@ async function seed() {
         });
       }
 
+      // Insert image
       await db.insert(schema.productImages).values({
         id: crypto.randomUUID(),
         productId: prodId,
@@ -226,6 +234,7 @@ async function seed() {
     }
   }
 
+  // 5. Seed Sample Orders for Demo
   const [existingOrder] = await db.select().from(schema.orders).limit(1);
   if (!existingOrder) {
     const allProducts = await db.select().from(schema.products);
@@ -234,6 +243,7 @@ async function seed() {
     const teapot = allProducts.find((p) => p.slug === "cast-iron-teapot");
 
     if (tumbler && throwBlanket && teapot) {
+      // Order 1: New request (placed)
       const order1Id = crypto.randomUUID();
       await db.insert(schema.orders).values({
         id: order1Id,
@@ -267,6 +277,7 @@ async function seed() {
         notes: "Order placed by customer via store request.",
       });
 
+      // Order 2: Confirmed by merchant
       const order2Id = crypto.randomUUID();
       await db.insert(schema.orders).values({
         id: order2Id,
@@ -307,6 +318,7 @@ async function seed() {
         notes: "Merchant confirmed order. Packaged for delivery dispatch.",
       });
 
+      // Order 3: Fulfilled / Delivered
       const order3Id = crypto.randomUUID();
       await db.insert(schema.orders).values({
         id: order3Id,
@@ -356,6 +368,7 @@ async function seed() {
 
       console.log("✓ Seeded sample orders across Placed, Confirmed, and Fulfilled states");
 
+      // 6. Seed Sample Reviews
       await db.insert(schema.reviews).values([
         {
           id: crypto.randomUUID(),

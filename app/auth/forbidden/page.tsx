@@ -8,11 +8,10 @@ export default function ForbiddenPage() {
         <div className="w-12 h-12 rounded-full bg-red-50 text-[var(--error)] flex items-center justify-center text-xl font-bold mbe-4">
           !
         </div>
-        <h1 className="text-xl font-semibold text-[var(--ink)] mbe-2">
-          Merchant Access Required
-        </h1>
+        <h1 className="text-xl font-semibold text-[var(--ink)] mbe-2">Merchant Access Required</h1>
         <p className="text-xs sm:text-sm text-[var(--ink-secondary)] mbe-6 leading-relaxed">
-          The merchant administration area requires an administrator account. You are currently logged in with a customer account or not authorized.
+          The merchant administration area requires an administrator account. You are currently
+          logged in with a customer account or not authorized.
         </p>
 
         <div className="flex gap-3">

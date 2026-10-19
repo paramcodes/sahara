@@ -43,9 +43,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         </div>
       )}
 
-      <h3 className="text-lg font-semibold text-[var(--ink)] tracking-tight mbe-1">
-        {title}
-      </h3>
+      <h3 className="text-lg font-semibold text-[var(--ink)] tracking-tight mbe-1">{title}</h3>
       <p className="text-sm text-[var(--ink-secondary)] mbe-6 max-w-xs leading-relaxed">
         {description}
       </p>

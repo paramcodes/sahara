@@ -1,7 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
+import { createProductAction } from "@/lib/actions/admin-products";
 import { Button } from "../ui/Button";
 import { useToast } from "../ui/Toast";
 
@@ -18,6 +21,7 @@ export function AddProductForm() {
   const [bannerPath, setBannerPath] = useState("");
   const [featured] = useState(false);
 
+  // Dynamic specs
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>([
     { key: "Material", value: "" },
     { key: "Dimensions", value: "" },
@@ -107,7 +111,7 @@ export function AddProductForm() {
       onSubmit={handleSubmit}
       className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-8 max-w-2xl"
     >
-      {}
+      {/* 1. Photo First per spec */}
       <div>
         <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider mbe-2">
           1. Product Photography (Photo First)
@@ -157,7 +161,7 @@ export function AddProductForm() {
         </div>
       </div>
 
-      {}
+      {/* 2. Core Info */}
       <div className="flex flex-col gap-4">
         <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider">
           2. Essential Details
@@ -221,7 +225,7 @@ export function AddProductForm() {
         </div>
       </div>
 
-      {}
+      {/* 3. Specifications */}
       <div>
         <div className="flex items-center justify-between mbe-3">
           <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider">
@@ -238,7 +242,7 @@ export function AddProductForm() {
 
         <div className="flex flex-col gap-2">
           {specs.map((spec, idx) => (
-            <div key={`spec-${idx}`} className="flex gap-2 items-center">
+            <div key={idx} className="flex gap-2 items-center">
               <input
                 type="text"
                 placeholder="Key (e.g. Material)"

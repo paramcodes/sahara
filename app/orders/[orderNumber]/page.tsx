@@ -49,7 +49,7 @@ export default async function OrderStatusPage({ params }: PageProps) {
             to schedule delivery.
           </p>
 
-          {}
+          {/* Stepper Status Bar */}
           {order.status === "cancelled" ? (
             <div className="mbs-6">
               <Badge variant="error">Order Cancelled</Badge>
@@ -63,11 +63,7 @@ export default async function OrderStatusPage({ params }: PageProps) {
                   className="absolute inset-is-6 inset-ie-6 inset-bs-3 h-0.5 bg-[var(--accent)] -z-0 origin-left transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
                   style={{
                     transform: `scaleX(${
-                      currentStatusIndex <= 0
-                        ? 0
-                        : currentStatusIndex === 1
-                        ? 0.5
-                        : 0.8
+                      currentStatusIndex <= 0 ? 0 : currentStatusIndex === 1 ? 0.5 : 0.8
                     })`,
                   }}
                 />
@@ -96,9 +92,9 @@ export default async function OrderStatusPage({ params }: PageProps) {
           )}
         </div>
 
-        {}
+        {/* Order Details & Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {}
+          {/* Items */}
           <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-4">
             <h2 className="text-sm font-semibold text-[var(--ink)]">Items Ordered</h2>
             <div className="flex flex-col divide-y divide-black/[0.04]">
@@ -138,7 +134,7 @@ export default async function OrderStatusPage({ params }: PageProps) {
             </div>
           </div>
 
-          {}
+          {/* Customer & Delivery */}
           <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-4">
             <h2 className="text-sm font-semibold text-[var(--ink)]">Delivery Information</h2>
             <div className="flex flex-col gap-2.5 text-xs sm:text-sm text-[var(--ink-secondary)]">
@@ -165,7 +161,7 @@ export default async function OrderStatusPage({ params }: PageProps) {
               )}
             </div>
 
-            {}
+            {/* Audit History */}
             {order.history && order.history.length > 0 && (
               <div className="pbs-4 border-t border-black/[0.06]">
                 <h3 className="text-xs font-semibold text-[var(--ink-tertiary)] uppercase tracking-wider mbe-2">

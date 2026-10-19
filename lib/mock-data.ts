@@ -215,7 +215,7 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     discountValue: 0,
     discountStartsAt: null,
     discountEndsAt: null,
-    stockQty: null,
+    stockQty: null, // Made to order
     featured: false,
     active: true,
     createdAt: new Date("2026-10-04"),

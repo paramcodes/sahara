@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { postReviewAction } from "@/lib/actions/reviews";
 import { Button } from "../ui/Button";
 import { useToast } from "../ui/Toast";
 
@@ -85,9 +87,7 @@ export function ReviewSection({
             isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >
-          <h3 className="text-sm font-semibold text-[var(--ink)] mbe-4">
-            Share Your Experience
-          </h3>
+          <h3 className="text-sm font-semibold text-[var(--ink)] mbe-4">Share Your Experience</h3>
 
           <div className="flex flex-col gap-4">
             <div>
@@ -146,29 +146,19 @@ export function ReviewSection({
               />
             </div>
 
-            <Button
-              type="submit"
-              size="md"
-              isLoading={isSubmitting}
-              className="mbs-2"
-            >
+            <Button type="submit" size="md" isLoading={isSubmitting} className="mbs-2">
               Post Review
             </Button>
           </div>
         </form>
       )}
 
-      {}
+      {/* Reviews List */}
       <div className="flex flex-col gap-4">
         {reviews.map((r) => (
-          <div
-            key={r.id}
-            className="p-5 rounded-2xl bg-white border border-black/[0.04]"
-          >
+          <div key={r.id} className="p-5 rounded-2xl bg-white border border-black/[0.04]">
             <div className="flex items-center justify-between mbe-2">
-              <span className="text-sm font-semibold text-[var(--ink)]">
-                {r.authorName}
-              </span>
+              <span className="text-sm font-semibold text-[var(--ink)]">{r.authorName}</span>
               <span
                 className="text-amber-600 text-xs tracking-widest"
                 aria-label={`${r.rating} out of 5 stars`}

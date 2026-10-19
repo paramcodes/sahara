@@ -3,12 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "../auth";
-import {
-  createProduct,
-  updateProduct,
-  deleteProduct,
-} from "../repos/products";
 import { getOrg } from "../repos/org";
+import { createProduct, deleteProduct, updateProduct } from "../repos/products";
 
 const ProductCreateSchema = z.object({
   name: z.string().min(2, "Product name is required"),

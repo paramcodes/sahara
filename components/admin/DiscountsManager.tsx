@@ -98,7 +98,7 @@ export function DiscountsManager({ products }: { products: DiscountProductItem[]
         )}
       </div>
 
-      {}
+      {/* Add New Promotion */}
       <form
         onSubmit={handleApplyDiscount}
         className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-6 max-w-xl"

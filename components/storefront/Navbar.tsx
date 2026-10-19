@@ -21,7 +21,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
   return (
     <header className="sticky inset-bs-0 z-40 frosted-nav transition-[background-color,backdrop-filter]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        {}
+        {/* Brand Wordmark */}
         <Link
           href="/"
           className="text-lg font-semibold tracking-tight text-[var(--ink)] flex items-center gap-2 hover:opacity-80 transition-opacity"
@@ -30,7 +30,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           <span>SAHARA</span>
         </Link>
 
-        {}
+        {/* Search Bar */}
         <form
           onSubmit={handleSearchSubmit}
           className="hidden md:flex items-center relative max-w-xs w-full mx-8"
@@ -56,7 +56,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           </svg>
         </form>
 
-        {}
+        {/* Navigation Actions */}
         <nav
           aria-label="Main Navigation"
           className="flex items-center gap-4 text-xs font-medium text-[var(--ink-secondary)]"
@@ -75,7 +75,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
             Merchant Admin
           </Link>
 
-          {}
+          {/* Cart Bag */}
           <Link
             href="/cart"
             aria-label={`Shopping Bag (${cartCount} items)`}

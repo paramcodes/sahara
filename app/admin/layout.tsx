@@ -7,6 +7,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   try {
     session = await requireAdmin();
   } catch {
+    // Demo fallback for cloud preview before remote DB is attached
     session = {
       user: {
         id: "demo-admin",
@@ -18,10 +19,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] flex flex-col sm:flex-row">
-      {}
+      {/* Sidebar */}
       <aside className="w-full sm:w-60 bg-white border-r border-black/[0.06] p-4 sm:p-6 shrink-0 flex flex-col justify-between">
         <div className="flex flex-col gap-6">
-          {}
+          {/* Logo & Org */}
           <div className="flex items-center justify-between">
             <Link
               href="/"
@@ -75,7 +76,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
       </aside>
 
-      {}
+      {/* Main Admin Surface */}
       <main className="flex-1 p-4 sm:p-8 lg:p-10 max-w-6xl overflow-y-auto">{children}</main>
     </div>
   );

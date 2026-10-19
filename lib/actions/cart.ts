@@ -4,25 +4,18 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession } from "../auth";
-import {
-  getOrCreateCart,
-  findCart,
-  getCartWithItems,
-  addToCart,
-  updateCartItemQty,
-  removeCartItem,
-} from "../repos/cart";
+import { getCartSessionId } from "../cart-session";
 import { db, schema } from "../db";
-import { eq } from "drizzle-orm";
-import { getOrg } from "../repos/org";
 import { MOCK_PRODUCTS } from "../mock-data";
 import {
   addToCart,
+  findCart,
   getCartWithItems,
   getOrCreateCart,
   removeCartItem,
   updateCartItemQty,
 } from "../repos/cart";
+import { getOrg } from "../repos/org";
 
 /**
  * `create: true` for mutations — the guest cookie can only be written inside a
@@ -70,6 +63,7 @@ export async function addToCartAction(productId: string, qty: number = 1) {
 
   const cart = await resolveWritableCart();
 
+  // Verify product is active
   const [product] = await db
     .select()
     .from(schema.products)
@@ -125,6 +119,7 @@ export async function getCurrentCartData() {
       })),
     };
   } catch {
+    // Demo fallback: pre-populate 1 item so cart & checkout are immediately viewable in production
     return {
       cartId: "demo-cart-1",
       items: [

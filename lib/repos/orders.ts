@@ -1,10 +1,8 @@
 import crypto from "node:crypto";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { db, schema } from "../db";
-import { eq, desc, and, inArray, sql } from "drizzle-orm";
-import crypto from "crypto";
-import { createOrderItemSnapshot, calculateCartTotals } from "../pricing";
 import { MOCK_ORDERS } from "../mock-data";
+import { calculateCartTotals, createOrderItemSnapshot } from "../pricing";
 import { DEFAULT_PAGE_SIZE } from "./products";
 
 export type OrderStatus = "placed" | "confirmed" | "fulfilled" | "cancelled";
@@ -12,8 +10,8 @@ export type OrderStatus = "placed" | "confirmed" | "fulfilled" | "cancelled";
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   placed: ["confirmed", "cancelled"],
   confirmed: ["fulfilled", "cancelled"],
-  fulfilled: [],
-  cancelled: [],
+  fulfilled: [], // terminal
+  cancelled: [], // terminal
 };
 
 export function canTransition(current: OrderStatus, target: OrderStatus): boolean {
@@ -47,6 +45,7 @@ export async function createOrder(data: {
   const now = new Date();
 
   return await db.transaction(async (tx) => {
+    // 1. Fetch fresh product data inside transaction to avoid stale prices or inactive items
     const freshItems: {
       product: typeof schema.products.$inferSelect;
       qty: number;
@@ -67,12 +66,6 @@ export async function createOrder(data: {
         throw new Error(`Product "${item.product.name}" is currently unavailable.`);
       }
 
-      if (freshProduct.stockQty !== null && freshProduct.stockQty < item.qty) {
-        throw new Error(
-          `Insufficient stock for "${freshProduct.name}". Only ${freshProduct.stockQty} remaining.`,
-        );
-      }
-
       // Atomic decrement: the stock guard lives in the UPDATE's WHERE clause so
       // two concurrent checkouts cannot both read the same count and oversell.
       let currentProduct = freshProduct;
@@ -83,8 +76,8 @@ export async function createOrder(data: {
           .where(
             and(
               eq(schema.products.id, freshProduct.id),
-              sql`${schema.products.stockQty} >= ${item.qty}`
-            )
+              sql`${schema.products.stockQty} >= ${item.qty}`,
+            ),
           )
           .returning({
             stockQty: schema.products.stockQty,
@@ -92,7 +85,7 @@ export async function createOrder(data: {
 
         if (updated.length === 0) {
           throw new Error(
-            `Insufficient stock for "${freshProduct.name}". Only ${freshProduct.stockQty} remaining.`
+            `Insufficient stock for "${freshProduct.name}". Only ${freshProduct.stockQty} remaining.`,
           );
         }
 
@@ -112,6 +105,7 @@ export async function createOrder(data: {
       createOrderItemSnapshot(item.product, item.qty, now),
     );
 
+    // 2. Insert order
     await tx.insert(schema.orders).values({
       id: orderId,
       orgId: data.orgId,
@@ -128,6 +122,7 @@ export async function createOrder(data: {
       status: "placed",
     });
 
+    // 3. Insert order item snapshots
     for (const snap of snapshots) {
       await tx.insert(schema.orderItems).values({
         id: crypto.randomUUID(),
@@ -141,6 +136,7 @@ export async function createOrder(data: {
       });
     }
 
+    // 4. Record initial status history
     await tx.insert(schema.orderStatusHistory).values({
       id: crypto.randomUUID(),
       orderId,
@@ -150,6 +146,7 @@ export async function createOrder(data: {
       notes: "Order placed by customer via store request.",
     });
 
+    // 5. Clear cart if cartId provided
     if (data.cartId) {
       await tx.delete(schema.cartItems).where(eq(schema.cartItems.cartId, data.cartId));
     }
@@ -282,6 +279,7 @@ export async function updateOrderStatus(
   }
 
   await db.transaction(async (tx) => {
+    // If transitioning to cancelled, restore product stock
     if (newStatus === "cancelled") {
       const items = await tx
         .select()
@@ -309,11 +307,13 @@ export async function updateOrderStatus(
       }
     }
 
+    // Update order status
     await tx
       .update(schema.orders)
       .set({ status: newStatus, updatedAt: new Date() })
       .where(eq(schema.orders.id, orderId));
 
+    // Record audit trail
     await tx.insert(schema.orderStatusHistory).values({
       id: crypto.randomUUID(),
       orderId,

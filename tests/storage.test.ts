@@ -19,6 +19,7 @@ describe("Storage Provider", () => {
   });
 
   it("saves valid image and returns public URL", async () => {
+    // Valid WebP signature: RIFF
     const validBuffer = Buffer.from([0x52, 0x49, 0x46, 0x46, 0x00, 0x00, 0x00, 0x00]);
     const path = await provider.save(validBuffer, "photo.webp", "image/webp");
     expect(path).toMatch(/^\/uploads\/[0-9a-f-]+\.webp$/);

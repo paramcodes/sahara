@@ -1,14 +1,12 @@
-import { getProducts } from "@/lib/repos/products";
-import { getStoreSettings } from "@/lib/repos/org";
-import { getCurrentCartData } from "@/lib/actions/cart";
-import { Navbar } from "@/components/storefront/Navbar";
 import { AnnouncementBar } from "@/components/storefront/AnnouncementBar";
 import { Footer } from "@/components/storefront/Footer";
 import { HeroBanner } from "@/components/storefront/HeroBanner";
 import { Navbar } from "@/components/storefront/Navbar";
 import { ProductRow } from "@/components/storefront/ProductRow";
 import { EmptyState } from "@/components/ui/EmptyState";
-
+import { getCurrentCartData } from "@/lib/actions/cart";
+import { getStoreSettings } from "@/lib/repos/org";
+import { getProducts } from "@/lib/repos/products";
 
 interface PageProps {
   searchParams: Promise<{ q?: string }>;
@@ -33,7 +31,7 @@ export default async function HomePage({ searchParams }: PageProps) {
       <Navbar cartCount={totalCartQty} />
 
       <main className="flex-1">
-        {}
+        {/* Only show full hero on unsearched landing */}
         {!q && (
           <HeroBanner
             headline={settings?.heroHeadline || undefined}
@@ -43,7 +41,7 @@ export default async function HomePage({ searchParams }: PageProps) {
           />
         )}
 
-        {}
+        {/* Catalog Section */}
         <section
           id="catalog"
           className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 scroll-mt-14"

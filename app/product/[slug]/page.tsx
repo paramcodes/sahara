@@ -1,4 +1,5 @@
 import { desc, eq } from "drizzle-orm";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AddToCartForm } from "@/components/storefront/AddToCartForm";
 import { Footer } from "@/components/storefront/Footer";
@@ -7,14 +8,6 @@ import { ReviewSection } from "@/components/storefront/ReviewSection";
 import { Badge } from "@/components/ui/Badge";
 import { getCurrentCartData } from "@/lib/actions/cart";
 import { db, schema } from "@/lib/db";
-import { eq, desc } from "drizzle-orm";
-import Image from "next/image";
-import { Navbar } from "@/components/storefront/Navbar";
-import { Footer } from "@/components/storefront/Footer";
-import { Badge } from "@/components/ui/Badge";
-import { AddToCartForm } from "@/components/storefront/AddToCartForm";
-import { ReviewSection } from "@/components/storefront/ReviewSection";
-import { formatCents, calculateProductPrice } from "@/lib/pricing";
 import { MOCK_REVIEWS } from "@/lib/mock-data";
 import { calculateProductPrice, formatCents } from "@/lib/pricing";
 import { getProductBySlug } from "@/lib/repos/products";
@@ -32,13 +25,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
     getCurrentCartData().catch(() => ({ cartId: "", items: [] })),
   ]);
 
-  if (!product || !product.active) {
+  if (!product?.active) {
     notFound();
   }
 
   const { items: cartItems } = cartData;
   const totalCartQty = cartItems.reduce((sum, item) => sum + item.qty, 0);
 
+  // Fetch reviews for this product with fallback
   let reviews: {
     id: string;
     authorName: string;
@@ -69,7 +63,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
       <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {}
+          {/* Gallery / Photos */}
           <div className="flex flex-col gap-4">
             <div className="relative aspect-square w-full rounded-3xl bg-white border border-black/[0.06] overflow-clip shadow-sm flex items-center justify-center">
               <Image
@@ -82,7 +76,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               />
             </div>
 
-            {}
+            {/* Thumbnail row if multiple */}
             {product.images.length > 1 && (
               <div className="flex gap-3 overflow-x-auto pbe-2">
                 {product.images.map((img) => (
@@ -103,7 +97,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          {}
+          {/* Product Details & Actions */}
           <div className="flex flex-col">
             <span className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] mbe-2">
               Sahara Collection
@@ -141,7 +135,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
               {product.description}
             </p>
 
-            {}
+            {/* Specs Table */}
             {product.specs && product.specs.length > 0 && (
               <div className="mbe-8 rounded-2xl bg-white border border-black/[0.06] overflow-clip p-4">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-[var(--ink-tertiary)] mbe-3">
@@ -161,14 +155,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
               </div>
             )}
 
-            {}
+            {/* Order / Add to Bag */}
             <div className="p-6 rounded-2xl bg-white border border-black/[0.06] shadow-sm">
               <AddToCartForm productId={product.id} stockQty={product.stockQty} />
             </div>
           </div>
         </div>
 
-        {}
+        {/* Customer Reviews */}
         <ReviewSection
           productId={product.id}
           reviews={reviews.map((r) => ({
