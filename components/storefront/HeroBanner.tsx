@@ -16,7 +16,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   bannerImage = "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop",
 }) => {
   return (
-    <section className="relative w-full h-[540px] sm:h-[620px] flex items-center justify-center overflow-clip bg-[oklch(92.334%_0.0067_286.27)]">
+    <section className="group relative w-full h-[540px] sm:h-[620px] flex items-center justify-center overflow-clip bg-[oklch(92.334%_0.0067_286.27)]">
       {/* Background Image with subtle gradient overlay */}
       <Image
         src={bannerImage}
@@ -24,7 +24,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         fill
         priority
         sizes="100vw"
-        className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] hover-scale-105"
+        className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-black/10" />
 

@@ -27,7 +27,7 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group block rounded-2xl bg-white p-4 sm:p-5 transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] border border-black/[0.04] hover:border-black/[0.1] hover:shadow-sm"
+      className="group card-hover block rounded-2xl bg-white p-4 sm:p-5 border border-black/[0.04] hover:border-black/[0.1] hover:shadow-md"
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
         {/* Left: Image & Info */}
@@ -40,7 +40,7 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
                 alt={product.name}
                 fill
                 sizes="96px"
-                className="object-cover group-scale-105 transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]"
+                className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] group-hover:scale-105"
               />
             ) : (
               <span className="text-xs text-[var(--ink-tertiary)]">No image</span>
