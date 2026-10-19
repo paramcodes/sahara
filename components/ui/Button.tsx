@@ -30,8 +30,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const radius = pill ? "rounded-full" : "rounded-xl";
 
     const variantClasses = {
-      primary: "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white shadow-sm font-medium",
-      secondary: "bg-black/[0.05] hover:bg-black/[0.08] text-[var(--ink)] font-medium",
+      primary:
+        "bg-[var(--accent)] hover:bg-[var(--accent-hover)] hover:-translate-y-0.5 hover:shadow-md text-white shadow-sm font-medium",
+      secondary:
+        "bg-black/[0.05] hover:bg-black/[0.08] hover:-translate-y-0.5 text-[var(--ink)] font-medium",
       danger: "bg-[var(--error-bg)] text-[var(--error)] hover:bg-red-100 font-medium",
       ghost: "bg-transparent hover:bg-black/[0.04] text-[var(--ink)] font-medium",
       link: "bg-transparent text-[var(--apple-blue)] hover:underline p-0 min-h-0",
@@ -41,7 +43,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={`inline-flex items-center justify-center gap-2 cursor-pointer transition-[background-color,color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-4 focus-visible:ring-blue-500/20 active:scale-[0.98] ${radius} ${sizeClasses} ${variantClasses} ${className}`}
+        className={`inline-flex items-center justify-center gap-2 cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-4 focus-visible:ring-blue-500/20 active:scale-[0.98] active:translate-y-0 ${radius} ${sizeClasses} ${variantClasses} ${className}`}
         {...props}
       >
         {isLoading && (

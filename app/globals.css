@@ -269,100 +269,20 @@ button,
   z-index: 1;
 }
 
-/* Form feedback */
-input:user-invalid {
-  border-color: var(--error);
-}
-input:user-valid {
-  border-color: var(--success);
-}
-
-/* Textarea grows with content */
-textarea {
-  field-sizing: content;
-  min-height: 3lh;
-  max-height: 12lh;
-  resize: none;
+/* Card elevation & hover animation */
+.card-hover {
+  transition:
+    transform 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    border-color 0.25s var(--ease-out);
 }
 
-/* Cross-document view transitions */
-@view-transition {
-  navigation: auto;
-}
-
-/* Anchor targets clear sticky header */
-html {
-  scroll-padding-block-start: 5rem;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-/* No rubber-band bounce on desktop */
-html {
-  overscroll-behavior-y: none;
-}
-
-@media (any-pointer: coarse) {
-  html {
-    overscroll-behavior-y: auto;
-  }
-}
-
-/* Hover motion only on devices that support hover */
 @media (hover: hover) and (pointer: fine) {
-  .hover-scale-105:hover {
-    transform: scale(1.05);
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.1);
   }
-  .group:hover .group-scale-105 {
-    transform: scale(1.05);
-  }
-  .hover-scale-110:hover {
-    transform: scale(1.1);
-  }
-}
-
-/* One-shot delight pop-in */
-@keyframes pop-in {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-.animate-pop-in {
-  animation: pop-in 300ms var(--ease-out) both;
-}
-
-/* Whole card clickable from one link */
-.card {
-  position: relative;
-}
-
-.card-link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-.card-link:focus-visible {
-  outline: 2px solid transparent;
-}
-
-.card:has(.card-link:focus-visible) {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
-
-.card :is(button, a:not(.card-link)) {
-  position: relative;
-  z-index: 1;
 }
 
 /* Form feedback */
