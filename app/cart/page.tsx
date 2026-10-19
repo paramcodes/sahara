@@ -12,7 +12,7 @@ export default async function CartPage() {
       <Navbar cartCount={totalCartQty} />
 
       <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 w-full">
-        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mb-8">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mbe-8">
           Shopping Bag
         </h1>
 

@@ -4,8 +4,17 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession } from "../auth";
-import { getCartSessionId } from "../cart-session";
+import {
+  getOrCreateCart,
+  findCart,
+  getCartWithItems,
+  addToCart,
+  updateCartItemQty,
+  removeCartItem,
+} from "../repos/cart";
 import { db, schema } from "../db";
+import { eq } from "drizzle-orm";
+import { getOrg } from "../repos/org";
 import { MOCK_PRODUCTS } from "../mock-data";
 import {
   addToCart,
@@ -15,16 +24,32 @@ import {
   updateCartItemQty,
 } from "../repos/cart";
 
-async function resolveCart() {
-  const [org] = await db.select().from(schema.orgs).limit(1);
+/**
+ * `create: true` for mutations — the guest cookie can only be written inside a
+ * Server Action. Read paths pass `create: false` so a page render never writes
+ * a cookie (throws in RSC) or inserts a cart row for a visitor who has not
+ * added anything yet.
+ */
+async function resolveCart({ create = false }: { create?: boolean } = {}) {
+  const org = await getOrg();
   if (!org) throw new Error("No store organization initialized.");
 
   const session = await getSession();
-  const sessionId = await getCartSessionId();
+  const sessionId = await getCartSessionId({ persist: create });
+  const userId = session?.user?.id;
 
-  const cart = await getOrCreateCart(org.id, session?.user?.id, sessionId);
+  const cart = create
+    ? await getOrCreateCart(org.id, userId, sessionId)
+    : await findCart(org.id, userId, sessionId);
 
   return { cart, orgId: org.id };
+}
+
+/** Mutation path: guarantees a cart row exists before touching cart items. */
+async function resolveWritableCart() {
+  const { cart } = await resolveCart({ create: true });
+  if (!cart) throw new Error("Could not resolve a cart.");
+  return cart;
 }
 
 const AddToCartSchema = z.object({
@@ -43,7 +68,7 @@ export async function addToCartAction(productId: string, qty: number = 1) {
     throw new Error("Invalid product quantity");
   }
 
-  const { cart } = await resolveCart();
+  const cart = await resolveWritableCart();
 
   const [product] = await db
     .select()
@@ -66,7 +91,7 @@ export async function updateCartItemQtyAction(itemId: string, qty: number) {
     throw new Error("Invalid quantity input");
   }
 
-  const { cart } = await resolveCart();
+  const cart = await resolveWritableCart();
   await updateCartItemQty(cart.id, parsed.data.itemId, parsed.data.qty);
   revalidatePath("/", "layout");
   return { success: true };
@@ -77,7 +102,7 @@ export async function removeCartItemAction(itemId: string) {
     throw new Error("Invalid item ID");
   }
 
-  const { cart } = await resolveCart();
+  const cart = await resolveWritableCart();
   await removeCartItem(cart.id, itemId);
   revalidatePath("/", "layout");
   return { success: true };
@@ -86,6 +111,9 @@ export async function removeCartItemAction(itemId: string) {
 export async function getCurrentCartData() {
   try {
     const { cart } = await resolveCart();
+    if (!cart) {
+      return { cartId: "", items: [] };
+    }
     const items = await getCartWithItems(cart.id);
     return {
       cartId: cart.id,

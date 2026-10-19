@@ -1,8 +1,11 @@
 import crypto from "node:crypto";
 import { and, desc, eq } from "drizzle-orm";
 import { db, schema } from "../db";
+import { eq, desc, and, inArray, sql } from "drizzle-orm";
+import crypto from "crypto";
+import { createOrderItemSnapshot, calculateCartTotals } from "../pricing";
 import { MOCK_ORDERS } from "../mock-data";
-import { calculateCartTotals, createOrderItemSnapshot } from "../pricing";
+import { DEFAULT_PAGE_SIZE } from "./products";
 
 export type OrderStatus = "placed" | "confirmed" | "fulfilled" | "cancelled";
 
@@ -49,12 +52,16 @@ export async function createOrder(data: {
       qty: number;
     }[] = [];
 
+    // Batch-load all products in one round trip instead of one query per item
+    const productIds = Array.from(new Set(data.items.map((i) => i.product.id)));
+    const loadedProducts = await tx
+      .select()
+      .from(schema.products)
+      .where(inArray(schema.products.id, productIds));
+    const productById = new Map(loadedProducts.map((p) => [p.id, p]));
+
     for (const item of data.items) {
-      const [freshProduct] = await tx
-        .select()
-        .from(schema.products)
-        .where(eq(schema.products.id, item.product.id))
-        .limit(1);
+      const freshProduct = productById.get(item.product.id);
 
       if (!freshProduct?.active) {
         throw new Error(`Product "${item.product.name}" is currently unavailable.`);
@@ -66,14 +73,38 @@ export async function createOrder(data: {
         );
       }
 
+      // Atomic decrement: the stock guard lives in the UPDATE's WHERE clause so
+      // two concurrent checkouts cannot both read the same count and oversell.
+      let currentProduct = freshProduct;
       if (freshProduct.stockQty !== null) {
-        await tx
+        const updated = await tx
           .update(schema.products)
-          .set({ stockQty: freshProduct.stockQty - item.qty })
-          .where(eq(schema.products.id, freshProduct.id));
+          .set({ stockQty: sql`${schema.products.stockQty} - ${item.qty}` })
+          .where(
+            and(
+              eq(schema.products.id, freshProduct.id),
+              sql`${schema.products.stockQty} >= ${item.qty}`
+            )
+          )
+          .returning({
+            stockQty: schema.products.stockQty,
+          });
+
+        if (updated.length === 0) {
+          throw new Error(
+            `Insufficient stock for "${freshProduct.name}". Only ${freshProduct.stockQty} remaining.`
+          );
+        }
+
+        currentProduct = {
+          ...freshProduct,
+          stockQty: updated[0].stockQty,
+        };
+        // Keep in-memory value authoritative for duplicate lines in one cart
+        productById.set(freshProduct.id, currentProduct);
       }
 
-      freshItems.push({ product: freshProduct, qty: item.qty });
+      freshItems.push({ product: currentProduct, qty: item.qty });
     }
 
     const totals = calculateCartTotals(freshItems, now);
@@ -184,7 +215,7 @@ export async function getOrderByNumber(orderNumber: string) {
       items,
       history,
     };
-  } catch (_err) {
+  } catch {
     const found = MOCK_ORDERS.find((o) => o.orderNumber === orderNumber);
     return found || null;
   }
@@ -194,7 +225,12 @@ export async function getOrders(options?: {
   orgId?: string;
   userId?: string;
   status?: OrderStatus;
+  limit?: number;
+  offset?: number;
 }) {
+  const limit = options?.limit && options.limit > 0 ? options.limit : DEFAULT_PAGE_SIZE;
+  const offset = options?.offset && options.offset > 0 ? options.offset : 0;
+
   try {
     const conditions = [];
 
@@ -208,19 +244,19 @@ export async function getOrders(options?: {
       conditions.push(eq(schema.orders.status, options.status));
     }
 
-    const list = await db
+    return await db
       .select()
       .from(schema.orders)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(schema.orders.createdAt));
-
-    return list;
-  } catch (_err) {
+      .orderBy(desc(schema.orders.createdAt))
+      .limit(limit)
+      .offset(offset);
+  } catch {
     let list = MOCK_ORDERS;
     if (options?.status) {
       list = list.filter((o) => o.status === options.status);
     }
-    return list;
+    return list.slice(offset, offset + limit);
   }
 }
 
@@ -252,18 +288,23 @@ export async function updateOrderStatus(
         .from(schema.orderItems)
         .where(eq(schema.orderItems.orderId, orderId));
 
-      for (const item of items) {
-        const [prod] = await tx
+      const productIds = Array.from(new Set(items.map((i) => i.productId)));
+      if (productIds.length > 0) {
+        const prods = await tx
           .select()
           .from(schema.products)
-          .where(eq(schema.products.id, item.productId))
-          .limit(1);
+          .where(inArray(schema.products.id, productIds));
+        const prodById = new Map(prods.map((p) => [p.id, p]));
 
-        if (prod && prod.stockQty !== null) {
-          await tx
-            .update(schema.products)
-            .set({ stockQty: prod.stockQty + item.qty })
-            .where(eq(schema.products.id, prod.id));
+        for (const item of items) {
+          const prod = prodById.get(item.productId);
+          if (prod && prod.stockQty !== null) {
+            await tx
+              .update(schema.products)
+              .set({ stockQty: prod.stockQty + item.qty })
+              .where(eq(schema.products.id, prod.id));
+            prodById.set(prod.id, { ...prod, stockQty: prod.stockQty + item.qty });
+          }
         }
       }
     }

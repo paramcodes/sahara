@@ -45,8 +45,10 @@ export function CheckoutForm() {
       className="p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-6"
     >
       <div>
-        <h2 className="text-lg font-semibold text-[var(--ink)] tracking-tight">Delivery Details</h2>
-        <p className="text-xs text-[var(--ink-secondary)] mt-0.5">
+        <h2 className="text-lg font-semibold text-[var(--ink)] tracking-tight">
+          Delivery Details
+        </h2>
+        <p className="text-xs text-[var(--ink-secondary)] mbs-0.5">
           We will contact you via WhatsApp or phone to confirm dispatch.
         </p>
       </div>
@@ -55,7 +57,7 @@ export function CheckoutForm() {
         <div>
           <label
             htmlFor="customerName"
-            className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5"
+            className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5"
           >
             Full Name *
           </label>
@@ -68,14 +70,14 @@ export function CheckoutForm() {
             value={formData.customerName}
             onChange={handleChange}
             placeholder="Jane Doe"
-            className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+            className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
           />
         </div>
 
         <div>
           <label
             htmlFor="customerEmail"
-            className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5"
+            className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5"
           >
             Email Address *
           </label>
@@ -88,7 +90,7 @@ export function CheckoutForm() {
             value={formData.customerEmail}
             onChange={handleChange}
             placeholder="jane@example.com"
-            className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+            className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
           />
         </div>
       </div>
@@ -96,7 +98,7 @@ export function CheckoutForm() {
       <div>
         <label
           htmlFor="customerPhone"
-          className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5"
+          className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5"
         >
           Phone Number (for Order Confirmation) *
         </label>
@@ -109,14 +111,14 @@ export function CheckoutForm() {
           value={formData.customerPhone}
           onChange={handleChange}
           placeholder="+1 (555) 000-0000"
-          className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+          className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
         />
       </div>
 
       <div>
         <label
           htmlFor="customerAddress"
-          className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5"
+          className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5"
         >
           Delivery Address *
         </label>
@@ -129,14 +131,14 @@ export function CheckoutForm() {
           value={formData.customerAddress}
           onChange={handleChange}
           placeholder="Street address, apartment or suite, city, postal code"
-          className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+          className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
         />
       </div>
 
       <div>
         <label
           htmlFor="notes"
-          className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5"
+          className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5"
         >
           Special Notes or Delivery Instructions (Optional)
         </label>
@@ -147,11 +149,11 @@ export function CheckoutForm() {
           value={formData.notes}
           onChange={handleChange}
           placeholder="e.g. Leave with building concierge"
-          className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+          className="w-full text-xs sm:text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
         />
       </div>
 
-      <div className="pt-4 border-t border-black/[0.06] flex flex-col gap-3">
+      <div className="pbs-4 border-t border-black/[0.06] flex flex-col gap-3">
         <Button
           type="submit"
           size="lg"

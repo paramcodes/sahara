@@ -130,16 +130,24 @@ export const productImages = pgTable(
   (table) => [index("product_images_product_id_idx").on(table.productId)],
 );
 
-export const carts = pgTable("carts", {
-  id: text("id").primaryKey(),
-  orgId: text("org_id")
-    .notNull()
-    .references(() => orgs.id, { onDelete: "cascade" }),
-  userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
-  sessionId: text("session_id"),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+// 6. Carts & Cart Items
+export const carts = pgTable(
+  "carts",
+  {
+    id: text("id").primaryKey(),
+    orgId: text("org_id").notNull().references(() => orgs.id, { onDelete: "cascade" }),
+    userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
+    sessionId: text("session_id"), // for guest carts
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    // getOrCreateCart resolves a cart by (orgId, userId) or (orgId, sessionId)
+    // on every page render and every cart mutation.
+    index("carts_org_user_idx").on(table.orgId, table.userId),
+    index("carts_org_session_idx").on(table.orgId, table.sessionId),
+  ]
+);
 
 export const cartItems = pgTable(
   "cart_items",

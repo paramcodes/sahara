@@ -1,13 +1,14 @@
+import { getProducts } from "@/lib/repos/products";
+import { getStoreSettings } from "@/lib/repos/org";
+import { getCurrentCartData } from "@/lib/actions/cart";
+import { Navbar } from "@/components/storefront/Navbar";
 import { AnnouncementBar } from "@/components/storefront/AnnouncementBar";
 import { Footer } from "@/components/storefront/Footer";
 import { HeroBanner } from "@/components/storefront/HeroBanner";
 import { Navbar } from "@/components/storefront/Navbar";
 import { ProductRow } from "@/components/storefront/ProductRow";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { getCurrentCartData } from "@/lib/actions/cart";
-import { db, schema } from "@/lib/db";
-import { MOCK_STORE_SETTINGS } from "@/lib/mock-data";
-import { getProducts } from "@/lib/repos/products";
+
 
 interface PageProps {
   searchParams: Promise<{ q?: string }>;
@@ -15,17 +16,15 @@ interface PageProps {
 
 export default async function HomePage({ searchParams }: PageProps) {
   const { q } = await searchParams;
-  let settings = null;
-  try {
-    const [row] = await db.select().from(schema.storeSettings).limit(1);
-    settings = row || MOCK_STORE_SETTINGS;
-  } catch {
-    settings = MOCK_STORE_SETTINGS;
-  }
 
-  const products = await getProducts({ query: q, activeOnly: true });
-  const { items } = await getCurrentCartData();
+  // Fetch independent data in parallel to cut TTFB
+  const [settings, products, cartData] = await Promise.all([
+    getStoreSettings(),
+    getProducts({ query: q, activeOnly: true }),
+    getCurrentCartData(),
+  ]);
 
+  const { items } = cartData;
   const totalCartQty = items.reduce((sum, item) => sum + item.qty, 0);
 
   return (
@@ -49,12 +48,12 @@ export default async function HomePage({ searchParams }: PageProps) {
           id="catalog"
           className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 scroll-mt-14"
         >
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 pb-4 border-b border-black/[0.06] gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mbe-8 pbe-4 border-b border-black/[0.06] gap-2">
             <div>
               <span className="text-xs font-semibold tracking-wider uppercase text-[var(--accent)]">
                 {q ? "Search Results" : "Collection"}
               </span>
-              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mt-1">
+              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mbs-1">
                 {q ? `Matches for “${q}”` : "Everyday Essentials"}
               </h2>
             </div>

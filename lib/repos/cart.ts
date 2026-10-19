@@ -1,6 +1,30 @@
 import crypto from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { db, schema } from "../db";
+import { eq, and, sql } from "drizzle-orm";
+import crypto from "crypto";
+
+export async function findCart(orgId: string, userId?: string, sessionId?: string) {
+  if (userId) {
+    const [cart] = await db
+      .select()
+      .from(schema.carts)
+      .where(and(eq(schema.carts.orgId, orgId), eq(schema.carts.userId, userId)))
+      .limit(1);
+    return cart ?? null;
+  }
+  if (sessionId) {
+    const [cart] = await db
+      .select()
+      .from(schema.carts)
+      .where(
+        and(eq(schema.carts.orgId, orgId), eq(schema.carts.sessionId, sessionId))
+      )
+      .limit(1);
+    return cart ?? null;
+  }
+  return null;
+}
 
 export async function getOrCreateCart(orgId: string, userId?: string, sessionId?: string) {
   let cart = null;
@@ -53,26 +77,20 @@ export async function getCartWithItems(cartId: string) {
 }
 
 export async function addToCart(cartId: string, productId: string, qty: number = 1) {
-  const [existing] = await db
-    .select()
-    .from(schema.cartItems)
-    .where(and(eq(schema.cartItems.cartId, cartId), eq(schema.cartItems.productId, productId)))
-    .limit(1);
-
-  if (existing) {
-    const newQty = existing.qty + qty;
-    await db
-      .update(schema.cartItems)
-      .set({ qty: newQty })
-      .where(eq(schema.cartItems.id, existing.id));
-  } else {
-    await db.insert(schema.cartItems).values({
+  // Single upsert instead of SELECT-then-INSERT/UPDATE: one round trip and no
+  // read-modify-write race when two tabs add the same product concurrently.
+  await db
+    .insert(schema.cartItems)
+    .values({
       id: crypto.randomUUID(),
       cartId,
       productId,
       qty,
+    })
+    .onConflictDoUpdate({
+      target: [schema.cartItems.cartId, schema.cartItems.productId],
+      set: { qty: sql`${schema.cartItems.qty} + ${qty}` },
     });
-  }
 
   await db.update(schema.carts).set({ updatedAt: new Date() }).where(eq(schema.carts.id, cartId));
 }

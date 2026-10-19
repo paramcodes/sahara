@@ -10,10 +10,10 @@ export default async function AdminDiscountsPage() {
         <span className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider">
           Promotions Engine
         </span>
-        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mt-0.5">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mbs-0.5">
           Store Discounts
         </h1>
-        <p className="text-xs sm:text-sm text-[var(--ink-secondary)] mt-1">
+        <p className="text-xs sm:text-sm text-[var(--ink-secondary)] mbs-1">
           Apply percentage or fixed reductions to individual items in your catalog.
         </p>
       </div>

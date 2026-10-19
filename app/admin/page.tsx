@@ -15,7 +15,7 @@ export default async function AdminOrdersPage() {
           <span className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider">
             Merchant Workspace
           </span>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mbs-0.5">
             Orders Inbox
           </h1>
         </div>

@@ -26,11 +26,11 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       className={`flex flex-col items-center justify-center text-center p-8 sm:p-12 rounded-2xl bg-white/60 border border-black/[0.04] max-w-md mx-auto my-6 ${className}`}
     >
       {icon ? (
-        <div className="w-12 h-12 mb-4 text-[var(--ink-tertiary)] flex items-center justify-center">
+        <div className="w-12 h-12 mbe-4 text-[var(--ink-tertiary)] flex items-center justify-center">
           {icon}
         </div>
       ) : (
-        <div className="w-12 h-12 mb-4 rounded-full bg-black/[0.04] text-[var(--ink-secondary)] flex items-center justify-center">
+        <div className="w-12 h-12 mbe-4 rounded-full bg-black/[0.04] text-[var(--ink-secondary)] flex items-center justify-center">
           <svg
             className="w-6 h-6"
             fill="none"
@@ -43,8 +43,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         </div>
       )}
 
-      <h3 className="text-lg font-semibold text-[var(--ink)] tracking-tight mb-1">{title}</h3>
-      <p className="text-sm text-[var(--ink-secondary)] mb-6 max-w-xs leading-relaxed">
+      <h3 className="text-lg font-semibold text-[var(--ink)] tracking-tight mbe-1">
+        {title}
+      </h3>
+      <p className="text-sm text-[var(--ink-secondary)] mbe-6 max-w-xs leading-relaxed">
         {description}
       </p>
 

@@ -32,8 +32,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
           </div>
 
-          {}
-          <nav className="flex sm:flex-col gap-1 overflow-x-auto pb-2 sm:pb-0 text-xs sm:text-sm font-medium">
+          {/* Nav links */}
+          <nav className="flex sm:flex-col gap-1 overflow-x-auto pbe-2 sm:pbe-0 text-xs sm:text-sm font-medium">
             <Link
               href="/admin"
               className="px-3.5 py-2.5 rounded-xl text-[var(--ink)] hover:bg-black/[0.04] transition-colors flex items-center gap-2.5 shrink-0"
@@ -61,8 +61,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </nav>
         </div>
 
-        {}
-        <div className="pt-4 border-t border-black/[0.06] hidden sm:flex flex-col gap-2">
+        {/* Footer info & view store */}
+        <div className="pbs-4 border-t border-black/[0.06] hidden sm:flex flex-col gap-2">
           <span className="text-[11px] text-[var(--ink-tertiary)] truncate">
             Logged in as {session.user.email}
           </span>

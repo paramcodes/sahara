@@ -1,3 +1,4 @@
+import { Navbar } from "@/components/storefront/Navbar";
 import { Footer } from "@/components/storefront/Footer";
 import { Navbar } from "@/components/storefront/Navbar";
 
@@ -46,16 +47,15 @@ export default function DocsPage() {
       <Navbar />
 
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12 w-full">
-        <div className="mb-10">
+        <div className="mbe-10">
           <span className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider">
             Documentation & Architecture
           </span>
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--ink)] mt-1">
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-[var(--ink)] mbs-1">
             Sahara Developer & Contributor Guide
           </h1>
-          <p className="text-sm text-[var(--ink-secondary)] mt-2 max-w-2xl leading-relaxed">
-            Everything you or any new contributor needs to understand the stack, UI component layer,
-            database design, and merchant workflows.
+          <p className="text-sm text-[var(--ink-secondary)] mbs-2 max-w-2xl leading-relaxed">
+            Everything you or any new contributor needs to understand the stack, UI component layer, database design, and merchant workflows.
           </p>
         </div>
 
@@ -66,14 +66,18 @@ export default function DocsPage() {
               className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col justify-between"
             >
               <div>
-                <span className="text-[11px] font-mono text-[var(--ink-tertiary)] block mb-1">
+                <span className="text-[11px] font-mono text-[var(--ink-tertiary)] block mbe-1">
                   {sec.file}
                 </span>
-                <h3 className="text-lg font-semibold text-[var(--ink)] mb-2">{sec.title}</h3>
-                <p className="text-xs text-[var(--ink-secondary)] leading-relaxed">{sec.summary}</p>
+                <h3 className="text-lg font-semibold text-[var(--ink)] mbe-2">
+                  {sec.title}
+                </h3>
+                <p className="text-xs text-[var(--ink-secondary)] leading-relaxed">
+                  {sec.summary}
+                </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-black/[0.04] text-xs font-medium text-[var(--apple-blue)]">
+              <div className="mbs-6 pbs-4 border-t border-black/[0.04] text-xs font-medium text-[var(--apple-blue)]">
                 Available in project root repository ↗
               </div>
             </div>

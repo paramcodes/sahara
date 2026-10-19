@@ -3,6 +3,12 @@ import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Sahara Atelier | Handcrafted Essentials",

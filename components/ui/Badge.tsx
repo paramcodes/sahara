@@ -17,7 +17,7 @@ export const Badge: React.FC<BadgeProps> = ({ children, variant = "neutral", cla
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs tracking-wide transition-colors ${variantStyles} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs tracking-wide transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] ${variantStyles} ${className}`}
     >
       {children}
     </span>

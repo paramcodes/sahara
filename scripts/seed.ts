@@ -43,7 +43,8 @@ async function seed() {
       heroHeadline: "Crafted for Daily Living.",
       heroSubheadline:
         "Every piece is designed with pure materials, understated form, and enduring longevity.",
-      heroBannerPath: "/uploads/hero-banner.webp",
+      heroBannerPath:
+        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop",
       accentColor: "#1d3529",
       announcement: "Complimentary local delivery on all inaugural orders.",
     });
@@ -73,8 +74,8 @@ async function seed() {
           .set({ role: "admin", orgId: org.id })
           .where(eq(schema.users.id, res.user.id));
       }
-    } catch (e: any) {
-      console.warn("Notice during admin signup:", e?.message || e);
+    } catch (e: unknown) {
+      console.warn("Notice during admin signup:", e instanceof Error ? e.message : e);
     }
   } else {
     await db

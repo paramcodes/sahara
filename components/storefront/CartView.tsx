@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { removeCartItemAction, updateCartItemQtyAction } from "@/lib/actions/cart";
-import { calculateCartTotals, calculateProductPrice, formatCents } from "@/lib/pricing";
+import Image from "next/image";
+import { Stepper } from "../ui/Stepper";
 import { Button } from "../ui/Button";
 import { EmptyState } from "../ui/EmptyState";
 import { Stepper } from "../ui/Stepper";
@@ -31,6 +30,7 @@ export interface CartItemView {
 export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
   const [items, setItems] = useState<CartItemView[]>(initialItems);
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
 
   const handleQtyChange = async (itemId: string, newQty: number) => {
     setLoadingItemId(itemId);
@@ -46,7 +46,14 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
 
   const handleRemove = async (itemId: string) => {
     setLoadingItemId(itemId);
+    setRemovingIds((prev) => new Set(prev).add(itemId));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     setItems((prev) => prev.filter((item) => item.id !== itemId));
+    setRemovingIds((prev) => {
+      const next = new Set(prev);
+      next.delete(itemId);
+      return next;
+    });
     await removeCartItemAction(itemId);
     setLoadingItemId(null);
   };
@@ -73,15 +80,21 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
           return (
             <div
               key={item.id}
-              className="flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-black/[0.04] transition-all"
+              className={`flex items-center justify-between p-4 sm:p-5 rounded-2xl bg-white border border-black/[0.04] transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+                removingIds.has(item.id)
+                  ? "opacity-0 translate-x-2"
+                  : "opacity-100 translate-x-0"
+              }`}
             >
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-black/[0.03] overflow-hidden shrink-0 border border-black/[0.04]">
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-black/[0.03] overflow-clip shrink-0 border border-black/[0.04]">
                   {item.product.bannerPath ? (
-                    <img
+                    <Image
                       src={item.product.bannerPath}
                       alt={item.product.name}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="80px"
+                      className="object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">
@@ -98,7 +111,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
                     {item.product.name}
                   </Link>
 
-                  <div className="text-xs text-[var(--ink-secondary)] mt-1">
+                  <div className="text-xs text-[var(--ink-secondary)] mbs-1">
                     {pricing.isActive ? (
                       <span className="flex items-center gap-1.5">
                         <span className="font-semibold text-[var(--ink)]">
@@ -124,13 +137,13 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
                   min={1}
                   max={item.product.stockQty || 99}
                   onChange={(val) => handleQtyChange(item.id, val)}
-                  disabled={loadingItemId === item.id}
+                  disabled={loadingItemId === item.id || removingIds.has(item.id)}
                 />
 
                 <button
                   onClick={() => handleRemove(item.id)}
                   aria-label={`Remove ${item.product.name} from bag`}
-                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-black/[0.04] hover:bg-black/[0.08] text-[var(--ink-secondary)] hover:text-[var(--error)] flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/[0.1]"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-black/[0.04] hover:bg-black/[0.08] text-[var(--ink-secondary)] hover:text-[var(--error)] flex items-center justify-center transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-black/[0.1]"
                 >
                   ✕
                 </button>
@@ -140,9 +153,11 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
         })}
       </div>
 
-      {}
-      <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-5 sticky top-20">
-        <h2 className="text-base font-semibold text-[var(--ink)] tracking-tight">Order Summary</h2>
+      {/* Summary Box */}
+      <div className="p-6 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col gap-5 sticky inset-bs-20">
+        <h2 className="text-base font-semibold text-[var(--ink)] tracking-tight">
+          Order Summary
+        </h2>
 
         <div className="flex flex-col gap-2.5 text-xs sm:text-sm text-[var(--ink-secondary)]">
           <div className="flex justify-between">
@@ -164,7 +179,7 @@ export function CartView({ initialItems }: { initialItems: CartItemView[] }) {
             <span className="text-emerald-700 font-medium">Complimentary</span>
           </div>
 
-          <div className="pt-3 border-t border-black/[0.06] flex justify-between text-base font-semibold text-[var(--ink)]">
+          <div className="pbs-3 border-t border-black/[0.06] flex justify-between text-base font-semibold text-[var(--ink)]">
             <span>Total</span>
             <span className="tabular-nums">{formatCents(totals.totalCents)}</span>
           </div>

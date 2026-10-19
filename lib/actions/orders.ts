@@ -3,9 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession, requireAdmin } from "../auth";
-import { db, schema } from "../db";
-import { createOrder, type OrderStatus, updateOrderStatus } from "../repos/orders";
-import { getCurrentCartData } from "./cart";
+import { getOrg } from "../repos/org";
 
 const CheckoutSchema = z.object({
   customerName: z.string().min(2, "Name must be at least 2 characters"),
@@ -30,12 +28,12 @@ export async function placeOrderAction(data: {
     };
   }
 
-  let org = null;
+  let orgId = "demo-org-1";
   try {
-    const [row] = await db.select().from(schema.orgs).limit(1);
-    org = row;
+    const org = await getOrg();
+    if (org) orgId = org.id;
   } catch {
-    org = { id: "demo-org-1" };
+    orgId = "demo-org-1";
   }
 
   const { cartId, items } = await getCurrentCartData();
@@ -47,7 +45,7 @@ export async function placeOrderAction(data: {
 
   try {
     const result = await createOrder({
-      orgId: org?.id || "demo-org-1",
+      orgId,
       userId: session?.user?.id || null,
       customerName: validated.data.customerName,
       customerEmail: validated.data.customerEmail,
@@ -67,7 +65,8 @@ export async function placeOrderAction(data: {
       orderId: result.orderId,
       orderNumber: result.orderNumber,
     };
-  } catch (_err: any) {
+  } catch {
+    // Demo fallback if database is disconnected
     return {
       success: true,
       orderId: "order-1",
@@ -105,7 +104,8 @@ export async function updateOrderStatusAction(
     revalidatePath("/admin");
     revalidatePath(`/orders/${orderId}`);
     return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err?.message || "Status update failed." };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Status update failed.";
+    return { success: false, error: message || "Status update failed." };
   }
 }

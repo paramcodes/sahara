@@ -31,7 +31,7 @@ export function Segmented<T extends string>({
             aria-selected={isSelected}
             type="button"
             onClick={() => onChange(option.value)}
-            className={`px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-all duration-150 cursor-pointer ${
+            className={`px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] cursor-pointer ${
               isSelected
                 ? "bg-white text-[var(--ink)] shadow-sm font-semibold"
                 : "text-[var(--ink-secondary)] hover:text-[var(--ink)]"

@@ -1,6 +1,5 @@
 import Link from "next/link";
-import type React from "react";
-import { calculateProductPrice, formatCents } from "@/lib/pricing";
+import Image from "next/image";
 import { Badge } from "../ui/Badge";
 
 export interface ProductRowProps {
@@ -26,18 +25,20 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group block rounded-2xl bg-white p-4 sm:p-5 transition-all duration-200 border border-black/[0.04] hover:border-black/[0.1] hover:shadow-sm"
+      className="group block rounded-2xl bg-white p-4 sm:p-5 transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] border border-black/[0.04] hover:border-black/[0.1] hover:shadow-sm"
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
         {}
         <div className="flex items-center gap-4 sm:gap-5 w-full sm:w-auto">
-          {}
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-black/[0.03] overflow-hidden shrink-0 flex items-center justify-center border border-black/[0.04]">
+          {/* Thumbnail */}
+          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-black/[0.03] overflow-clip shrink-0 flex items-center justify-center border border-black/[0.04]">
             {product.bannerPath ? (
-              <img
+              <Image
                 src={product.bannerPath}
                 alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                fill
+                sizes="96px"
+                className="object-cover group-scale-105 transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)]"
               />
             ) : (
               <span className="text-xs text-[var(--ink-tertiary)]">No image</span>
@@ -46,8 +47,8 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
 
           {}
           <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-base sm:text-lg font-medium text-[var(--ink)] tracking-tight truncate group-hover:text-[var(--accent)] transition-colors">
+            <div className="flex items-center gap-2 mbe-1">
+              <h3 className="text-base sm:text-lg font-medium text-[var(--ink)] tracking-tight truncate group-hover:text-[var(--accent)] transition-colors duration-150 ease-[cubic-bezier(0.23,1,0.32,1)]">
                 {product.name}
               </h3>
               {pricing.isActive && (
@@ -59,7 +60,7 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
               )}
             </div>
 
-            <p className="text-xs sm:text-sm text-[var(--ink-secondary)] line-clamp-2 max-w-lg mb-2">
+            <p className="text-xs sm:text-sm text-[var(--ink-secondary)] line-clamp-2 max-w-lg mbe-2">
               {product.description}
             </p>
 
@@ -78,8 +79,8 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
           </div>
         </div>
 
-        {}
-        <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-black/[0.04]">
+        {/* Right: Pricing & CTA */}
+        <div className="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto shrink-0 pbs-2 sm:pbs-0 border-t sm:border-t-0 border-black/[0.04]">
           <div className="text-left sm:text-right">
             {pricing.isActive ? (
               <div className="flex items-baseline gap-2">
@@ -99,7 +100,7 @@ export const ProductRow: React.FC<ProductRowProps> = ({ product }) => {
             )}
           </div>
 
-          <span className="text-xs font-medium text-[var(--accent)] group-hover:translate-x-0.5 transition-transform flex items-center gap-1 sm:mt-2">
+          <span className="text-xs font-medium text-[var(--accent)] group-hover:translate-x-0.5 transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] flex items-center gap-1 sm:mbs-2">
             View Details →
           </span>
         </div>

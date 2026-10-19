@@ -4,7 +4,8 @@ import crypto from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession } from "../auth";
-import { db, schema } from "../db";
+import { getOrg } from "../repos/org";
+import crypto from "crypto";
 
 const ReviewSchema = z.object({
   productId: z.string().min(1),
@@ -35,7 +36,7 @@ export async function postReviewAction(data: {
     };
   }
 
-  const [org] = await db.select().from(schema.orgs).limit(1);
+  const org = await getOrg();
   if (!org) return { success: false, error: "Store not found" };
 
   const session = await getSession();
@@ -54,7 +55,8 @@ export async function postReviewAction(data: {
 
     revalidatePath(`/product/[slug]`, "page");
     return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err?.message || "Failed to post review." };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to post review.";
+    return { success: false, error: message || "Failed to post review." };
   }
 }

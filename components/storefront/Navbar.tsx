@@ -8,7 +8,6 @@ import { useState } from "react";
 export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
-  const [_isSearchOpen, _setIsSearchOpen] = useState(false);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +19,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 frosted-nav transition-all">
+    <header className="sticky inset-bs-0 z-40 frosted-nav transition-[background-color,backdrop-filter]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         {}
         <Link
@@ -42,10 +41,10 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search catalog..."
             aria-label="Search catalog"
-            className="w-full text-xs bg-black/[0.04] hover:bg-black/[0.06] focus:bg-white border border-transparent focus:border-black/[0.1] rounded-full py-2 pl-9 pr-4 text-[var(--ink)] placeholder-[var(--ink-tertiary)] transition-all focus:outline-none focus:ring-2 focus:ring-black/[0.05]"
+            className="w-full text-xs bg-black/[0.04] hover:bg-black/[0.06] focus:bg-white border border-transparent focus:border-black/[0.1] rounded-full py-2 ps-9 pe-4 text-[var(--ink)] placeholder-[var(--ink-tertiary)] transition-colors focus:ring-2 focus:ring-black/[0.05]"
           />
           <svg
-            className="w-3.5 h-3.5 absolute left-3 text-[var(--ink-tertiary)]"
+            className="w-3.5 h-3.5 absolute inset-is-3 text-[var(--ink-tertiary)]"
             fill="none"
             aria-hidden="true"
             stroke="currentColor"
@@ -80,7 +79,7 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           <Link
             href="/cart"
             aria-label={`Shopping Bag (${cartCount} items)`}
-            className="relative flex items-center gap-1.5 py-2 px-3 min-h-[44px] rounded-full bg-black/[0.04] hover:bg-black/[0.08] text-[var(--ink)] transition-all active:scale-95"
+            className="relative flex items-center gap-1.5 py-2 px-3 min-h-[44px] rounded-full bg-black/[0.04] hover:bg-black/[0.08] text-[var(--ink)] transition-[background-color,transform] active:scale-95"
           >
             <svg
               className="w-4 h-4"

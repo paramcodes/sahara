@@ -19,10 +19,10 @@ export default async function CheckoutPage() {
       <Navbar cartCount={totals.itemCount} />
 
       <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 w-full">
-        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mb-2">
+        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mbe-2">
           Checkout Request
         </h1>
-        <p className="text-xs sm:text-sm text-[var(--ink-secondary)] mb-8">
+        <p className="text-xs sm:text-sm text-[var(--ink-secondary)] mbe-8">
           Place your order request. We will review availability and message you to confirm dispatch.
         </p>
 
@@ -55,7 +55,7 @@ export default async function CheckoutPage() {
               })}
             </div>
 
-            <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-1.5 text-xs">
+            <div className="pbs-3 border-t border-black/[0.06] flex flex-col gap-1.5 text-xs">
               <div className="flex justify-between text-[var(--ink-secondary)]">
                 <span>Subtotal</span>
                 <span className="tabular-nums">{formatCents(totals.subtotalCents)}</span>
@@ -66,7 +66,7 @@ export default async function CheckoutPage() {
                   <span className="tabular-nums">-{formatCents(totals.discountCents)}</span>
                 </div>
               )}
-              <div className="flex justify-between font-semibold text-sm text-[var(--ink)] pt-1.5">
+              <div className="flex justify-between font-semibold text-sm text-[var(--ink)] pbs-1.5">
                 <span>Estimated Due</span>
                 <span className="tabular-nums">{formatCents(totals.totalCents)}</span>
               </div>

@@ -1,8 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { deleteProductAction, toggleProductActiveAction } from "@/lib/actions/admin-products";
+import Image from "next/image";
+import { Switch } from "../ui/Switch";
+import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { useToast } from "../ui/Toast";
+import {
+  toggleProductActiveAction,
+  deleteProductAction,
+} from "@/lib/actions/admin-products";
 import { formatCents } from "@/lib/pricing";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
@@ -50,10 +57,10 @@ export function ProductsManager({ initialProducts }: { initialProducts: AdminPro
   if (products.length === 0) {
     return (
       <div className="p-12 text-center rounded-3xl bg-white border border-black/[0.06] flex flex-col items-center">
-        <h3 className="text-base font-semibold text-[var(--ink)] mb-2">
+        <h3 className="text-base font-semibold text-[var(--ink)] mbe-2">
           No products in your catalog yet
         </h3>
-        <p className="text-xs text-[var(--ink-secondary)] mb-6 max-w-sm">
+        <p className="text-xs text-[var(--ink-secondary)] mbe-6 max-w-sm">
           Add your very first product in under two minutes with photos, specs, and price.
         </p>
         <Link href="/admin/products/new">
@@ -80,9 +87,15 @@ export function ProductsManager({ initialProducts }: { initialProducts: AdminPro
             <tr key={p.id} className="hover:bg-black/[0.01] transition-colors">
               <td className="py-3.5 px-4 font-medium text-[var(--ink)]">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-black/[0.03] overflow-hidden shrink-0 border border-black/[0.04]">
+                  <div className="relative w-12 h-12 rounded-xl bg-black/[0.03] overflow-clip shrink-0 border border-black/[0.04]">
                     {p.bannerPath ? (
-                      <img src={p.bannerPath} alt={p.name} className="w-full h-full object-cover" />
+                      <Image
+                        src={p.bannerPath}
+                        alt={p.name}
+                        fill
+                        sizes="48px"
+                        className="object-cover"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
                         Item

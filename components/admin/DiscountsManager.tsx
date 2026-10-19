@@ -62,9 +62,9 @@ export function DiscountsManager({ products }: { products: DiscountProductItem[]
 
   return (
     <div className="flex flex-col gap-8">
-      {}
-      <div className="rounded-3xl bg-white border border-black/[0.06] shadow-sm overflow-hidden p-6">
-        <h2 className="text-base font-semibold text-[var(--ink)] mb-4">
+      {/* Active Discounts Table */}
+      <div className="rounded-3xl bg-white border border-black/[0.06] shadow-sm overflow-clip p-6">
+        <h2 className="text-base font-semibold text-[var(--ink)] mbe-4">
           Active Promotional Rules ({activeDiscounts.length})
         </h2>
 
@@ -106,7 +106,7 @@ export function DiscountsManager({ products }: { products: DiscountProductItem[]
         <h2 className="text-base font-semibold text-[var(--ink)]">Configure Product Promotion</h2>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5">
+          <label className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5">
             Select Product
           </label>
           <select
@@ -124,7 +124,7 @@ export function DiscountsManager({ products }: { products: DiscountProductItem[]
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5">
               Promotion Type
             </label>
             <select
@@ -138,7 +138,7 @@ export function DiscountsManager({ products }: { products: DiscountProductItem[]
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1.5">
+            <label className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1.5">
               {discountType === "percent" ? "Percentage (e.g. 20 for 20%)" : "Amount (cents)"}
             </label>
             <input

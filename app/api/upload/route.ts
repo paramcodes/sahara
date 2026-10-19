@@ -22,7 +22,8 @@ export async function POST(req: NextRequest) {
     const savedUrl = await storage.save(buffer, file.name, file.type);
 
     return NextResponse.json({ url: savedUrl });
-  } catch (err: any) {
-    return NextResponse.json({ error: err?.message || "Upload failed" }, { status: 400 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Upload failed";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 }

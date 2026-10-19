@@ -13,7 +13,7 @@ export default async function AdminProductsPage() {
           <span className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider">
             Catalog Management
           </span>
-          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--ink)] mbs-0.5">
             Products ({products.length})
           </h1>
         </div>

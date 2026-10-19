@@ -3,8 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "../auth";
-import { db, schema } from "../db";
-import { createProduct, deleteProduct, updateProduct } from "../repos/products";
+import {
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "../repos/products";
+import { getOrg } from "../repos/org";
 
 const ProductCreateSchema = z.object({
   name: z.string().min(2, "Product name is required"),
@@ -19,7 +23,7 @@ const ProductCreateSchema = z.object({
 });
 
 export async function createProductAction(data: z.infer<typeof ProductCreateSchema>) {
-  const _session = await requireAdmin();
+  await requireAdmin();
   const validated = ProductCreateSchema.safeParse(data);
 
   if (!validated.success) {
@@ -29,7 +33,7 @@ export async function createProductAction(data: z.infer<typeof ProductCreateSche
     };
   }
 
-  const [org] = await db.select().from(schema.orgs).limit(1);
+  const org = await getOrg();
   if (!org) return { success: false, error: "Store not initialized." };
 
   try {
@@ -52,8 +56,9 @@ export async function createProductAction(data: z.infer<typeof ProductCreateSche
     revalidatePath("/", "layout");
     revalidatePath("/admin");
     return { success: true, product };
-  } catch (err: any) {
-    return { success: false, error: err?.message || "Failed to create product." };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, error: message || "Failed to create product." };
   }
 }
 
@@ -84,8 +89,9 @@ export async function updateProductDiscountAction(
     revalidatePath("/", "layout");
     revalidatePath("/admin/discounts");
     return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err?.message || "Failed to update discount" };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return { success: false, error: message || "Failed to update discount" };
   }
 }
 
@@ -101,8 +107,10 @@ export async function deleteProductAction(id: string) {
   await requireAdmin();
   try {
     await deleteProduct(id);
-  } catch (err: any) {
-    if (err?.code === "23503") {
+  } catch (err: unknown) {
+    const e = err as Error & { code?: string };
+    // If Postgres FK constraint fails because of historical orders, safely deactivate
+    if (e.code === "23503") {
       await updateProduct(id, { active: false });
       revalidatePath("/", "layout");
       revalidatePath("/admin");

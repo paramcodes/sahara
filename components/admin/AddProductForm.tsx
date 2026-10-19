@@ -1,9 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import type React from "react";
-import { useState } from "react";
-import { createProductAction } from "@/lib/actions/admin-products";
+import Image from "next/image";
 import { Button } from "../ui/Button";
 import { useToast } from "../ui/Toast";
 
@@ -18,7 +16,7 @@ export function AddProductForm() {
   const [description, setDescription] = useState("");
   const [stockQty, setStockQty] = useState<string>("");
   const [bannerPath, setBannerPath] = useState("");
-  const [featured, _setFeatured] = useState(false);
+  const [featured] = useState(false);
 
   const [specs, setSpecs] = useState<{ key: string; value: string }[]>([
     { key: "Material", value: "" },
@@ -111,13 +109,19 @@ export function AddProductForm() {
     >
       {}
       <div>
-        <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider mb-2">
+        <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider mbe-2">
           1. Product Photography (Photo First)
         </label>
         <div className="flex items-center gap-6">
-          <div className="w-28 h-28 rounded-2xl bg-black/[0.03] border-2 border-dashed border-black/[0.1] flex items-center justify-center overflow-hidden shrink-0">
+          <div className="relative w-28 h-28 rounded-2xl bg-black/[0.03] border-2 border-dashed border-black/[0.1] flex items-center justify-center overflow-clip shrink-0">
             {bannerPath ? (
-              <img src={bannerPath} alt="Product preview" className="w-full h-full object-cover" />
+              <Image
+                src={bannerPath}
+                alt="Product preview"
+                fill
+                sizes="112px"
+                className="object-cover"
+              />
             ) : isUploading ? (
               <span className="text-xs text-[var(--ink-secondary)] animate-pulse">
                 Uploading...
@@ -160,7 +164,7 @@ export function AddProductForm() {
         </label>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1">
+          <label className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1">
             Product Title *
           </label>
           <input
@@ -169,13 +173,13 @@ export function AddProductForm() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Stoneware Espresso Cup"
-            className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+            className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1">
+            <label className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1">
               Price (USD $) *
             </label>
             <input
@@ -185,12 +189,12 @@ export function AddProductForm() {
               value={priceDollars}
               onChange={(e) => setPriceDollars(e.target.value)}
               placeholder="38.00"
-              className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+              className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1">
+            <label className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1">
               Stock Quantity (Leave blank if made to order)
             </label>
             <input
@@ -198,13 +202,13 @@ export function AddProductForm() {
               value={stockQty}
               onChange={(e) => setStockQty(e.target.value)}
               placeholder="Unlimited / Made to order"
-              className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+              className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[var(--ink-secondary)] mb-1">
+          <label className="block text-xs font-medium text-[var(--ink-secondary)] mbe-1">
             Description
           </label>
           <textarea
@@ -212,14 +216,14 @@ export function AddProductForm() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Story, material composition, texture, and inspiration..."
-            className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
+            className="w-full text-sm bg-black/[0.03] border border-black/[0.08] rounded-xl p-3 text-[var(--ink)] focus:ring-2 focus:ring-black/[0.1] focus:bg-white"
           />
         </div>
       </div>
 
       {}
       <div>
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mbe-3">
           <label className="block text-xs font-semibold text-[var(--ink)] uppercase tracking-wider">
             3. Specifications Table (Optional)
           </label>
@@ -261,8 +265,8 @@ export function AddProductForm() {
         </div>
       </div>
 
-      {}
-      <div className="pt-4 border-t border-black/[0.06] flex items-center justify-between">
+      {/* Submit */}
+      <div className="pbs-4 border-t border-black/[0.06] flex items-center justify-between">
         <Button
           type="submit"
           size="lg"
